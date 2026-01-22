@@ -2,12 +2,13 @@
 using System.IO;
 using System.Collections.Generic;
 using OfficeOpenXml;
+using WYSAPlayerRanker.DataStructures;
 
 namespace WYSAPlayerRanker
 {
     public class ExcelPlayerDataLoader
     {
-        private const int STARTING_ROW = 3;
+        private const int COACH_EVAL_STARTING_ROW = 3;
 
         private enum Columns
         {
@@ -25,6 +26,58 @@ namespace WYSAPlayerRanker
             Attendance = 11,
             GoalkeeperSkills = 12,
             AdditionalComments = 13
+        }
+
+        public static List<PlayerRegistrationData> LoadRegisteredPlayers(string filePath)
+        {
+            var registeredPlayers = new List<PlayerRegistrationData>();
+
+            ExcelPackage.License.SetNonCommercialOrganization("Westford Youth Soccer Association");
+
+            using (var package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                ExcelWorksheet worksheet = null;
+
+                foreach (var currentWorksheet in package.Workbook.Worksheets)
+                {
+                    if (currentWorksheet.Cells[1, 1]?.GetValue<string>() != "Program Name")
+                    {
+                        continue;
+                    }
+
+                    worksheet = currentWorksheet;
+                    break;
+                }
+
+                int rowCount = worksheet?.Dimension?.Rows ?? 0;
+
+                // Assuming first row contains headers
+                for (int row = 2; row <= rowCount; row++)
+                {
+                    try
+                    {
+                        var player = new PlayerRegistrationData();
+                        player.FirstName = worksheet.Cells[row, 5].GetValue<string>();
+                        player.LastName = worksheet.Cells[row, 4].GetValue<string>();
+                        player.GradeLevel = Int32.Parse(worksheet.Cells[row, 6].GetValue<string>().Substring(0, 1));
+
+                        if (string.IsNullOrWhiteSpace(player.FirstName) && string.IsNullOrWhiteSpace(player.LastName))
+                        {
+                            // Skip empty rows
+                            continue;
+                        }
+
+                        registeredPlayers.Add(player);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log or handle parsing errors for individual rows
+                        System.Diagnostics.Debug.WriteLine($"Error parsing row {row}: {ex.Message}");
+                    }
+                }
+            }
+
+            return registeredPlayers;
         }
 
         public static List<SeasonPlayerData> LoadPlayersFromExcel(string filePath)
@@ -46,16 +99,16 @@ namespace WYSAPlayerRanker
                     }
 
                     worksheet = currentWorksheet;
+                    break;
                 }
 
                 int rowCount = worksheet?.Dimension?.Rows ?? 0;
 
                 // Assuming first row contains headers
-                for (int row = STARTING_ROW; row <= rowCount; row++)
+                for (int row = COACH_EVAL_STARTING_ROW; row <= rowCount; row++)
                 {
                     try
                     {
-                        worksheet.Cells[3, 1].GetValue<string>();
                         var player = new SeasonPlayerData();
                         player.SourceDataFile = Path.GetFileName(filePath);
                         player.FirstName = worksheet.Cells[row, (int)Columns.FirstName].GetValue<string>();

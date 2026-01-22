@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,9 +27,10 @@ namespace WYSAPlayerRanker
         public double CurrentSeasonScore { get; set; }
         public double PreviousSeasonScore { get; set; }
         public double EvalScore { get; set; }
-        public bool HasAssociatedCoach { get; set; }
-
+        public string PreviousTeam { get; set; }
+        public int GradeLevel { get; set; }
         public bool HasRedFlag { get; set; }
+        public bool HasAssociatedCoach { get; set; }
 
         public double GetCombinedScore()
         {

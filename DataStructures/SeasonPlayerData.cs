@@ -11,6 +11,31 @@ namespace WYSAPlayerRanker
 
     public class SeasonPlayerData
     {
+        public SeasonPlayerData()
+        {
+        }
+
+        public SeasonPlayerData(SeasonPlayerData other)
+        {
+            SourceDataFile = other.SourceDataFile;
+            FirstName = other.FirstName;
+            LastName = other.LastName;
+            TeamName = other.TeamName;
+            EvaluatingCoach = other.EvaluatingCoach;
+            Division = other.Division;
+            OrdinalRanking = other.OrdinalRanking;
+            Season = other.Season;
+            PlacementRecommendation = other.PlacementRecommendation;
+            TechnicalScore = other.TechnicalScore;
+            TacticalScore = other.TacticalScore;
+            MentalScore = other.MentalScore;
+            PhysicalScore = other.PhysicalScore;
+            AttendanceScore = other.AttendanceScore;
+            GoalkeeperScore = other.GoalkeeperScore;
+            Comments = other.Comments;
+            RedFlag = other.RedFlag;
+        }
+
         public string SourceDataFile { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

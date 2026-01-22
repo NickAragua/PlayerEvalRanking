@@ -33,8 +33,15 @@
             this.btnMergeEval = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.TeamGridView = new System.Windows.Forms.DataGridView();
+            this.cboSelectedTeam = new System.Windows.Forms.ComboBox();
+            this.btnAddNewTeam = new System.Windows.Forms.Button();
+            this.btnRemoveTeam = new System.Windows.Forms.Button();
+            this.RegistrantsGridView = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.CoalescedGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.IndividualGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TeamGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RegistrantsGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // CoalescedGridView
@@ -63,7 +70,7 @@
             // 
             // btnMergeEval
             // 
-            this.btnMergeEval.Location = new System.Drawing.Point(598, 396);
+            this.btnMergeEval.Location = new System.Drawing.Point(647, 397);
             this.btnMergeEval.Name = "btnMergeEval";
             this.btnMergeEval.Size = new System.Drawing.Size(75, 24);
             this.btnMergeEval.TabIndex = 3;
@@ -73,7 +80,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(598, 427);
+            this.button1.Location = new System.Drawing.Point(728, 398);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(160, 23);
             this.button1.TabIndex = 4;
@@ -83,7 +90,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(489, 396);
+            this.button2.Location = new System.Drawing.Point(894, 398);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(100, 23);
             this.button2.TabIndex = 5;
@@ -91,20 +98,75 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
+            // TeamGridView
+            // 
+            this.TeamGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.TeamGridView.Location = new System.Drawing.Point(2, 427);
+            this.TeamGridView.Name = "TeamGridView";
+            this.TeamGridView.Size = new System.Drawing.Size(638, 431);
+            this.TeamGridView.TabIndex = 6;
+            // 
+            // cboSelectedTeam
+            // 
+            this.cboSelectedTeam.FormattingEnabled = true;
+            this.cboSelectedTeam.Location = new System.Drawing.Point(2, 397);
+            this.cboSelectedTeam.Name = "cboSelectedTeam";
+            this.cboSelectedTeam.Size = new System.Drawing.Size(121, 21);
+            this.cboSelectedTeam.TabIndex = 7;
+            this.cboSelectedTeam.SelectedIndexChanged += new System.EventHandler(this.cboSelectedTeam_SelectedIndexChanged);
+            // 
+            // btnAddNewTeam
+            // 
+            this.btnAddNewTeam.Location = new System.Drawing.Point(130, 398);
+            this.btnAddNewTeam.Name = "btnAddNewTeam";
+            this.btnAddNewTeam.Size = new System.Drawing.Size(93, 23);
+            this.btnAddNewTeam.TabIndex = 8;
+            this.btnAddNewTeam.Text = "Add New Team";
+            this.btnAddNewTeam.UseVisualStyleBackColor = true;
+            this.btnAddNewTeam.Click += new System.EventHandler(this.btnAddNewTeam_Click);
+            // 
+            // btnRemoveTeam
+            // 
+            this.btnRemoveTeam.Location = new System.Drawing.Point(229, 397);
+            this.btnRemoveTeam.Name = "btnRemoveTeam";
+            this.btnRemoveTeam.Size = new System.Drawing.Size(101, 23);
+            this.btnRemoveTeam.TabIndex = 9;
+            this.btnRemoveTeam.Text = "Remove Team";
+            this.btnRemoveTeam.UseVisualStyleBackColor = true;
+            this.btnRemoveTeam.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // RegistrantsGridView
+            // 
+            this.RegistrantsGridView.AllowUserToAddRows = false;
+            this.RegistrantsGridView.AllowUserToDeleteRows = false;
+            this.RegistrantsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.RegistrantsGridView.Location = new System.Drawing.Point(647, 428);
+            this.RegistrantsGridView.Name = "RegistrantsGridView";
+            this.RegistrantsGridView.ReadOnly = true;
+            this.RegistrantsGridView.Size = new System.Drawing.Size(624, 430);
+            this.RegistrantsGridView.TabIndex = 10;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1271, 500);
+            this.ClientSize = new System.Drawing.Size(1271, 870);
+            this.Controls.Add(this.RegistrantsGridView);
+            this.Controls.Add(this.btnRemoveTeam);
+            this.Controls.Add(this.btnAddNewTeam);
+            this.Controls.Add(this.cboSelectedTeam);
+            this.Controls.Add(this.TeamGridView);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnMergeEval);
             this.Controls.Add(this.IndividualGridView);
             this.Controls.Add(this.CoalescedGridView);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Player Evaluation Manager";
             ((System.ComponentModel.ISupportInitialize)(this.CoalescedGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.IndividualGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TeamGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RegistrantsGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -115,6 +177,11 @@
         private System.Windows.Forms.Button btnMergeEval;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.DataGridView TeamGridView;
+        private System.Windows.Forms.ComboBox cboSelectedTeam;
+        private System.Windows.Forms.Button btnAddNewTeam;
+        private System.Windows.Forms.Button btnRemoveTeam;
+        private System.Windows.Forms.DataGridView RegistrantsGridView;
     }
 }
 
