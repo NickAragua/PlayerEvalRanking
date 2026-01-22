@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace WYSAPlayerRanker
 {
@@ -15,20 +11,21 @@ namespace WYSAPlayerRanker
 
     public class SeasonPlayerData
     {
+        public string SourceDataFile { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string TeamName { get; set; }
+        [Browsable(false)]
+        public string EvaluatingCoach { get; set; }
         public int Division { get; set; }
-
         public int OrdinalRanking   { get; set; }
         public string Season { get; set; }
         public PlacementRecommendation PlacementRecommendation { get; set; }
-
-        public double TechnicalScore { get; set; }
-        public double TacticalScore { get; set; }
-        public double MentalScore { get; set; }
-        public double PhysicalScore { get; set; }
-        public double AttendanceScore { get; set; }
+        public int TechnicalScore { get; set; }
+        public int TacticalScore { get; set; }
+        public int MentalScore { get; set; }
+        public int PhysicalScore { get; set; }
+        public int AttendanceScore { get; set; }
 
         public double AverageScore
         {
@@ -38,8 +35,17 @@ namespace WYSAPlayerRanker
             }
         }
 
-        public double GoalkeeperScore { get; set; }
-
+        public int GoalkeeperScore { get; set; }
         public string Comments { get; set; }
+        public bool RedFlag { get; set; }
+
+        // used as a key in the data store as well
+        public string FullName
+        {
+            get
+            {
+                return $"{FirstName} {LastName}";
+            }
+        }
     }
 }

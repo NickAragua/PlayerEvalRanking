@@ -36,8 +36,19 @@ namespace WYSAPlayerRanker
 
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
-                var worksheet = package.Workbook.Worksheets[0]; // Load first sheet
-                int rowCount = worksheet.Dimension?.Rows ?? 0;
+                ExcelWorksheet worksheet = null;
+
+                foreach (var currentWorksheet in package.Workbook.Worksheets)
+                {
+                    if (currentWorksheet.Cells[1, 1]?.GetValue<string>() != "Player")
+                    {
+                        continue;
+                    }
+
+                    worksheet = currentWorksheet;
+                }
+
+                int rowCount = worksheet?.Dimension?.Rows ?? 0;
 
                 // Assuming first row contains headers
                 for (int row = STARTING_ROW; row <= rowCount; row++)
@@ -46,6 +57,7 @@ namespace WYSAPlayerRanker
                     {
                         worksheet.Cells[3, 1].GetValue<string>();
                         var player = new SeasonPlayerData();
+                        player.SourceDataFile = Path.GetFileName(filePath);
                         player.FirstName = worksheet.Cells[row, (int)Columns.FirstName].GetValue<string>();
                         player.LastName = worksheet.Cells[row, (int)Columns.LastName].GetValue<string>();
                         player.TeamName = worksheet.Cells[row, (int)Columns.Team].GetValue<string>();
@@ -53,12 +65,12 @@ namespace WYSAPlayerRanker
                         player.OrdinalRanking = worksheet.Cells[row, (int)Columns.OrdinalRanking].GetValue<int>();
                         player.Season = "Fall 2025";//GetCellValue(worksheet, row, "Season"),
                         player.PlacementRecommendation = ParsePlacementRecommendation(worksheet.Cells[row, (int)Columns.Placement].GetValue<string>());
-                        player.TechnicalScore = worksheet.Cells[row, (int)Columns.Technical].GetValue<double>();
-                        player.TacticalScore = worksheet.Cells[row, (int)Columns.Tactical].GetValue<double>();
-                        player.MentalScore = worksheet.Cells[row, (int)Columns.Mental].GetValue<double>();
-                        player.PhysicalScore = worksheet.Cells[row, (int)Columns.Physical].GetValue<double>();
-                        player.AttendanceScore = worksheet.Cells[row, (int)Columns.Attendance].GetValue<double>();
-                        player.GoalkeeperScore = worksheet.Cells[row, (int)Columns.GoalkeeperSkills].GetValue<double>();
+                        player.TechnicalScore = worksheet.Cells[row, (int)Columns.Technical].GetValue<int>();
+                        player.TacticalScore = worksheet.Cells[row, (int)Columns.Tactical].GetValue<int>();
+                        player.MentalScore = worksheet.Cells[row, (int)Columns.Mental].GetValue<int>();
+                        player.PhysicalScore = worksheet.Cells[row, (int)Columns.Physical].GetValue<int>();
+                        player.AttendanceScore = worksheet.Cells[row, (int)Columns.Attendance].GetValue<int>();
+                        player.GoalkeeperScore = worksheet.Cells[row, (int)Columns.GoalkeeperSkills].GetValue<int>();
                         player.Comments = worksheet.Cells[row, (int)Columns.AdditionalComments].GetValue<string>();
 
                         if (string.IsNullOrWhiteSpace(player.FirstName) && string.IsNullOrWhiteSpace(player.LastName))
