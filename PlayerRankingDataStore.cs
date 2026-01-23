@@ -155,6 +155,11 @@ namespace WYSAPlayerRanker
             }
         }
 
+        public bool PlayerIsRegistered(CoalescedPlayerData playerData)
+        {
+            return RegisteredPlayers.ContainsKey(playerData.Key);
+        }
+
         public void AddPlayerToTeam(string teamName, CoalescedPlayerData playerData)
         {
             if (!Teams.ContainsKey(teamName))

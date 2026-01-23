@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -26,6 +27,13 @@ namespace WYSAPlayerRanker
             InitializeCoalescedGridViewDragDrop();
             EnableRegistrantsGridViewDragDrop();
             InitializeCoalescedGridViewSorting();
+            InitializeGridViewFormatting();
+        }
+
+        private void InitializeGridViewFormatting()
+        {
+            CoalescedGridView.CellFormatting += CoalescedGridView_CellFormatting;
+            TeamGridView.CellFormatting += TeamGridView_CellFormatting;
         }
 
         private void InitializeCoalescedGridViewSorting()
@@ -267,6 +275,7 @@ namespace WYSAPlayerRanker
                     dataStore.ProcessRegisteredPlayers(loadedData);
                     RegistrantsGridView.DataSource = loadedData;
                     RegistrantsGridView.Refresh();
+                    CoalescedGridView.Refresh();
                 }
             }
         }
@@ -416,6 +425,51 @@ namespace WYSAPlayerRanker
             }
 
             CoalescedGridView.DataSource = sortedData.ToList();
+            CoalescedGridView.Refresh();
+        }
+
+        private void CoalescedGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (CoalescedGridView.Rows[e.RowIndex].DataBoundItem is CoalescedPlayerData playerData)
+            {
+                if (playerData.HasRedFlag)
+                {
+                    e.CellStyle.BackColor = Color.Red;
+                    e.CellStyle.ForeColor = Color.White;
+                }
+                else if (!dataStore.PlayerIsRegistered(playerData))
+                {
+                    e.CellStyle.BackColor = Color.Orange;
+                    e.CellStyle.ForeColor = Color.Black;
+                }
+                else
+                {
+                    e.CellStyle.BackColor = Color.White;
+                    e.CellStyle.ForeColor = Color.Black;
+                }
+            }
+        }
+
+        private void TeamGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (TeamGridView.Rows[e.RowIndex].DataBoundItem is CoalescedPlayerData playerData)
+            {
+                if (playerData.HasRedFlag)
+                {
+                    e.CellStyle.BackColor = Color.Red;
+                    e.CellStyle.ForeColor = Color.White;
+                }
+                else if (!dataStore.PlayerIsRegistered(playerData)) 
+                {
+                    e.CellStyle.BackColor = Color.Orange;
+                    e.CellStyle.ForeColor = Color.Black;
+                }
+                else
+                {
+                    e.CellStyle.BackColor = Color.White;
+                    e.CellStyle.ForeColor = Color.Black;
+                }
+            }
         }
 
         private void btnSaveState_Click(object sender, EventArgs e)
