@@ -12,8 +12,6 @@ If you want to move a player off a team or to another team, drag and drop them u
 
 TODO: Integrate previous season and end-of-spring eval scores from "master player list"
 
-TODO: cross check against 'registered player list' to see if player being assigned to team is actually registered. Or maybe highlight them in red or something.
-
 TODO: export team list as "presentable" excel file
 
 TODO: autosave?
