@@ -15,6 +15,9 @@ namespace WYSAPlayerRanker
 
         PlayerRankingDataStore dataStore = new PlayerRankingDataStore();
 
+        private SortOrder coalescedSortOrder = SortOrder.Ascending;
+        private string coalescedSortColumn = string.Empty;
+
         public Form1()
         {
             InitializeComponent();
@@ -22,6 +25,12 @@ namespace WYSAPlayerRanker
             InitializeTeamGridViewDragDrop();
             InitializeCoalescedGridViewDragDrop();
             EnableRegistrantsGridViewDragDrop();
+            InitializeCoalescedGridViewSorting();
+        }
+
+        private void InitializeCoalescedGridViewSorting()
+        {
+            CoalescedGridView.ColumnHeaderMouseClick += CoalescedGridView_ColumnHeaderMouseClick;
         }
 
         private void EnableIndividualGridViewDragAndDrop()
@@ -326,6 +335,87 @@ namespace WYSAPlayerRanker
                 TeamGridView.DataSource = dataStore.GetTeam(cboSelectedTeam.SelectedItem.ToString());
                 TeamGridView.Refresh();
             }
+        }
+
+        private void CoalescedGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            string columnName = CoalescedGridView.Columns[e.ColumnIndex].DataPropertyName;
+
+            if (string.IsNullOrEmpty(columnName))
+            {
+                columnName = CoalescedGridView.Columns[e.ColumnIndex].Name;
+            }
+
+            // Toggle sort order if clicking the same column
+            if (coalescedSortColumn == columnName)
+            {
+                coalescedSortOrder = coalescedSortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+            }
+            else
+            {
+                coalescedSortColumn = columnName;
+                coalescedSortOrder = SortOrder.Ascending;
+            }
+
+            SortCoalescedGridView(columnName, coalescedSortOrder);
+        }
+
+        private void SortCoalescedGridView(string columnName, SortOrder sortOrder)
+        {
+            var dataSource = CoalescedGridView.DataSource as List<CoalescedPlayerData>;
+
+            if (dataSource == null)
+            {
+                return;
+            }
+
+            IEnumerable<CoalescedPlayerData> sortedData = dataSource;
+
+            switch (columnName)
+            {
+                case "FullName":
+                    sortedData = sortOrder == SortOrder.Ascending
+                        ? dataSource.OrderBy(p => p.FullName)
+                        : dataSource.OrderByDescending(p => p.FullName);
+                    break;
+                case "CurrentSeasonScore":
+                    sortedData = sortOrder == SortOrder.Ascending
+                        ? dataSource.OrderBy(p => p.CurrentSeasonScore)
+                        : dataSource.OrderByDescending(p => p.CurrentSeasonScore);
+                    break;
+                case "PreviousSeasonScore":
+                    sortedData = sortOrder == SortOrder.Ascending
+                        ? dataSource.OrderBy(p => p.PreviousSeasonScore)
+                        : dataSource.OrderByDescending(p => p.PreviousSeasonScore);
+                    break;
+                case "EvalScore":
+                    sortedData = sortOrder == SortOrder.Ascending
+                        ? dataSource.OrderBy(p => p.EvalScore)
+                        : dataSource.OrderByDescending(p => p.EvalScore);
+                    break;
+                case "GradeLevel":
+                    sortedData = sortOrder == SortOrder.Ascending
+                        ? dataSource.OrderBy(p => p.GradeLevel)
+                        : dataSource.OrderByDescending(p => p.GradeLevel);
+                    break;
+                case "HasRedFlag":
+                    sortedData = sortOrder == SortOrder.Ascending
+                        ? dataSource.OrderBy(p => p.HasRedFlag)
+                        : dataSource.OrderByDescending(p => p.HasRedFlag);
+                    break;
+                case "HasAssociatedCoach":
+                    sortedData = sortOrder == SortOrder.Ascending
+                        ? dataSource.OrderBy(p => p.HasAssociatedCoach)
+                        : dataSource.OrderByDescending(p => p.HasAssociatedCoach);
+                    break;
+                case "PreviousTeam":
+                    sortedData = sortOrder == SortOrder.Ascending
+                        ? dataSource.OrderBy(p => p.PreviousTeam)
+                        : dataSource.OrderByDescending(p => p.PreviousTeam);
+                    break;
+            }
+
+            CoalescedGridView.DataSource = sortedData.ToList();
         }
     }
 }
