@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Numerics;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using WYSAPlayerRanker.DataStructures;
 
 namespace WYSAPlayerRanker
@@ -31,6 +28,8 @@ namespace WYSAPlayerRanker
         public Dictionary<string, List<CoalescedPlayerData>> Teams { get; set; } = new Dictionary<string, List<CoalescedPlayerData>>();
 
         public Dictionary<string, PlayerRegistrationData> RegisteredPlayers { get; set; } = new Dictionary<string, PlayerRegistrationData>();
+
+        public ApplicationSettings ApplicationSettings { get; set; } = new ApplicationSettings();
 
         public void CreateBackup() 
         { 
@@ -88,7 +87,7 @@ namespace WYSAPlayerRanker
                 };
 
                 CoalescedPlayerDataByName.Add(player.Key, coalescedPlayerData);
-            } 
+            }
             else
             {
                 coalescedPlayerData = CoalescedPlayerDataByName[player.Key];
@@ -102,7 +101,7 @@ namespace WYSAPlayerRanker
                 case PlayerOperationType.PreviousSeason:
                     coalescedPlayerData.PreviousSeasonScore = player.AverageScore;
                     break;
-                //case PlayerOperationType.Eval:
+                    //case PlayerOperationType.Eval:
             }
 
             if (RegisteredPlayers.ContainsKey(player.Key))
@@ -110,11 +109,23 @@ namespace WYSAPlayerRanker
                 coalescedPlayerData.GradeLevel = RegisteredPlayers[player.Key].GradeLevel;
             }
 
-            coalescedPlayerData.PreviousTeam = player.TeamName;
+            if (!String.IsNullOrEmpty(coalescedPlayerData.PreviousTeam)) {
+                coalescedPlayerData.PreviousTeam = player.TeamName;
+            }
+
+            if (coalescedPlayerData.PreviousTeamDivision == 0)
+            {
+                coalescedPlayerData.PreviousTeamDivision = player.Division;
+            }
+
+            coalescedPlayerData.CalculateCombinedScore(ApplicationSettings);
+
             coalescedPlayerData.HasRedFlag |= player.RedFlag;
 
             return activityLog;
         }
+
+        
 
         public void MovePlayerToTeam(CoalescedPlayerData playerData, string teamName)
         {
@@ -142,7 +153,10 @@ namespace WYSAPlayerRanker
                 CoalescedPlayerDataByName.Remove(playerData.Key);
             }
         }
-        
+
+        /// <summary>
+        /// Given a list of registrants, adds them to the registrant dictionary; updates grade levels in coalesced data
+        /// </summary>
         public void ProcessRegisteredPlayers(List<PlayerRegistrationData> registrants)
         {
             RegisteredPlayers.Clear();
@@ -151,6 +165,11 @@ namespace WYSAPlayerRanker
                 if (!RegisteredPlayers.ContainsKey(registrant.Key))
                 {
                     RegisteredPlayers.Add(registrant.Key, registrant);
+                }
+
+                if (CoalescedPlayerDataByName.ContainsKey(registrant.Key))
+                {
+                    CoalescedPlayerDataByName[registrant.Key].GradeLevel = registrant.GradeLevel;
                 }
             }
         }

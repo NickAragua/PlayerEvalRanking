@@ -19,6 +19,8 @@ namespace WYSAPlayerRanker
         private SortOrder coalescedSortOrder = SortOrder.Ascending;
         private string coalescedSortColumn = string.Empty;
 
+        SettingsDialog settingsDialog = new SettingsDialog();
+
         public Form1()
         {
             InitializeComponent();
@@ -284,7 +286,7 @@ namespace WYSAPlayerRanker
         {
             if (IndividualGridView.DataSource == null)
             {
-                MessageBox.Show("Please load individual player data first by dragging and dropping an Excel file onto the Individual Player Data grid.", "No Data Loaded", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please load coach eval data first by dragging and dropping an Excel file onto the Individual Player Data grid.", "No Data Loaded", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -304,6 +306,12 @@ namespace WYSAPlayerRanker
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (IndividualGridView.DataSource == null)
+            {
+                MessageBox.Show("Please load coach eval data first by dragging and dropping an Excel file onto the Individual Player Data grid.", "No Data Loaded", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             dataStore.CreateBackup();
 
             foreach (SeasonPlayerData playerData in IndividualGridView.DataSource as List<SeasonPlayerData>)
@@ -533,6 +541,12 @@ namespace WYSAPlayerRanker
                     }
                 }
             }
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            settingsDialog.UpdateDataStore(dataStore);
+            settingsDialog.ShowDialog();
         }
     }
 }

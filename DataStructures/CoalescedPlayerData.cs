@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace WYSAPlayerRanker
 {
@@ -11,8 +6,8 @@ namespace WYSAPlayerRanker
     {
         public CoalescedPlayerData()
         {
-
         }
+
         public CoalescedPlayerData(CoalescedPlayerData other)
         {
             FullName = other.FullName;
@@ -27,22 +22,81 @@ namespace WYSAPlayerRanker
         public double CurrentSeasonScore { get; set; }
         public double PreviousSeasonScore { get; set; }
         public double EvalScore { get; set; }
+        public double CombinedScore { get; set; }        
         public string PreviousTeam { get; set; }
         public int GradeLevel { get; set; }
         public bool HasRedFlag { get; set; }
         public bool HasAssociatedCoach { get; set; }
+        public int PreviousTeamDivision { get; set; }
 
-        public double GetCombinedScore()
-        {
-            // Example weighted average calculation
-            return (CurrentSeasonScore * 0.4) + (PreviousSeasonScore * 0.3) + (EvalScore * 0.3);
-        }
+        
 
+        [Browsable(false)]
         public string Key
         {
             get
             {
                 return FullName.ToLower();
+            }
+        }
+    }
+
+    public static class CoalescedPlayerDataExtensions
+    {
+        public static void CalculateCombinedScore(this CoalescedPlayerData playerData, ApplicationSettings appSettings)
+        {
+            double divisionMultiplier = 1;
+            if (playerData.PreviousTeamDivision >= 0 && playerData.PreviousTeamDivision < appSettings.DivisionWeights.Count)
+            {
+                divisionMultiplier = appSettings.DivisionWeights[playerData.PreviousTeamDivision - 1];
+            }
+
+            // scenarios:
+            // no data at all: just return a 1 and set a "red flag"
+            if (playerData.CurrentSeasonScore == 0 && playerData.PreviousSeasonScore == 0 && playerData.EvalScore == 0)
+            {
+                playerData.HasRedFlag = true;
+                playerData.CombinedScore = 1;
+            }
+            // only eval scores: just return eval scores
+            else if (playerData.CurrentSeasonScore == 0 && playerData.PreviousSeasonScore == 0 && playerData.EvalScore > 0)
+            {
+                playerData.CombinedScore = playerData.EvalScore;
+            }
+            // only previous season scores: just return previous season scores, with division weight
+            else if (playerData.CurrentSeasonScore == 0 && playerData.PreviousSeasonScore > 0 && playerData.EvalScore == 0)
+            {
+                playerData.CombinedScore = playerData.PreviousSeasonScore * divisionMultiplier;
+            }
+            // only previous season and eval scores
+            else if (playerData.CurrentSeasonScore == 0 && playerData.PreviousSeasonScore > 0 && playerData.EvalScore > 0)
+            {
+                playerData.CombinedScore = ((playerData.PreviousSeasonScore * appSettings.PreviousSeasonWeight) * divisionMultiplier +
+                        (playerData.EvalScore * appSettings.EvalWeight));
+            }
+            // only current season scores: just  current season score, with division weight
+            else if (playerData.CurrentSeasonScore > 0 && playerData.PreviousSeasonScore == 0 && playerData.EvalScore == 0)
+            {
+                playerData.CombinedScore = playerData.CurrentSeasonScore * divisionMultiplier;
+            }
+            // only current season and eval scores
+            else if (playerData.CurrentSeasonScore > 0 && playerData.PreviousSeasonScore == 0 && playerData.EvalScore > 0)
+            {
+                playerData.CombinedScore = ((playerData.CurrentSeasonScore * appSettings.CurrentSeasonWeight) * divisionMultiplier +
+                        (playerData.EvalScore * appSettings.EvalWeight));
+            }
+            // only current and previous season scores
+            else if (playerData.CurrentSeasonScore > 0 && playerData.PreviousSeasonScore > 0 && playerData.EvalScore == 0)
+            {
+                playerData.CombinedScore = ((playerData.CurrentSeasonScore * appSettings.CurrentSeasonWeight) * divisionMultiplier +
+                        (playerData.PreviousSeasonScore * appSettings.PreviousSeasonWeight) * divisionMultiplier);
+            }
+            // all three scores available: use complete formula
+            else
+            {
+                playerData.CombinedScore = ((playerData.CurrentSeasonScore * appSettings.CurrentSeasonWeight) * divisionMultiplier +
+                        (playerData.PreviousSeasonScore * appSettings.PreviousSeasonWeight) * divisionMultiplier +
+                        (playerData.EvalScore * appSettings.EvalWeight));
             }
         }
     }

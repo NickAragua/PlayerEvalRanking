@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace WYSAPlayerRanker.DataStructures
         public string LastName { get; set; }
         public int GradeLevel { get; set; }
 
+        [Browsable(false)]
         public string FullName
         {
             get
@@ -20,6 +22,7 @@ namespace WYSAPlayerRanker.DataStructures
             }
         }
 
+        [Browsable(false)]
         public string Key
         {
             get

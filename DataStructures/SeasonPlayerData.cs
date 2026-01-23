@@ -64,6 +64,7 @@ namespace WYSAPlayerRanker
         public string Comments { get; set; }
         public bool RedFlag { get; set; }
 
+        [Browsable(false)]
         public string FullName
         {
             get
@@ -72,6 +73,7 @@ namespace WYSAPlayerRanker
             }
         }
 
+        [Browsable(false)]
         public string Key
         {
             get

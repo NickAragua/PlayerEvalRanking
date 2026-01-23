@@ -41,6 +41,7 @@
             this.btnSaveState = new System.Windows.Forms.Button();
             this.btnLoadState = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
+            this.btnSettings = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.CoalescedGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.IndividualGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TeamGridView)).BeginInit();
@@ -176,11 +177,22 @@
             this.btnExport.Text = "Export";
             this.btnExport.UseVisualStyleBackColor = true;
             // 
+            // btnSettings
+            // 
+            this.btnSettings.Location = new System.Drawing.Point(1184, 399);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(75, 23);
+            this.btnSettings.TabIndex = 15;
+            this.btnSettings.Text = "Settings";
+            this.btnSettings.UseVisualStyleBackColor = true;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1271, 870);
+            this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.btnExport);
             this.Controls.Add(this.btnLoadState);
             this.Controls.Add(this.btnSaveState);
@@ -218,6 +230,7 @@
         private System.Windows.Forms.Button btnSaveState;
         private System.Windows.Forms.Button btnLoadState;
         private System.Windows.Forms.Button btnExport;
+        private System.Windows.Forms.Button btnSettings;
     }
 }
 
