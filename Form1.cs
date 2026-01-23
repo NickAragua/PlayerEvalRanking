@@ -30,6 +30,8 @@ namespace WYSAPlayerRanker
             EnableRegistrantsGridViewDragDrop();
             InitializeCoalescedGridViewSorting();
             InitializeGridViewFormatting();
+
+            settingsDialog.Owner = this;
         }
 
         private void InitializeGridViewFormatting()
@@ -106,6 +108,16 @@ namespace WYSAPlayerRanker
 
         private void CoalescedGridView_DragEnter(object sender, DragEventArgs e)
         {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (files.Any(f => f.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase)))
+                {
+                    e.Effect = DragDropEffects.Copy;
+                    return;
+                }
+            }
+
             if (e.Data.GetDataPresent(typeof(DragDropData)))
             {
                 e.Effect = DragDropEffects.Move;
@@ -118,6 +130,20 @@ namespace WYSAPlayerRanker
 
         private void CoalescedGridView_DragDrop(object sender, DragEventArgs e)
         {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                string excelFile = files.FirstOrDefault(f => f.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase));
+
+                if (excelFile != null)
+                {
+                    var loadedData = ExcelPlayerDataLoader.LoadMasterList(excelFile);
+                    dataStore.ImportFromLastSeasonMasterList(loadedData);
+                    CoalescedGridView.DataSource = dataStore.CoalescedPlayerDataByName.Values.ToList();
+                    CoalescedGridView.Refresh();
+                }
+            }
+
             if (!e.Data.GetDataPresent(typeof(DragDropData)))
             {
                 return;
@@ -547,6 +573,14 @@ namespace WYSAPlayerRanker
         {
             settingsDialog.UpdateDataStore(dataStore);
             settingsDialog.ShowDialog();
+        }
+
+        public void RefreshViews()
+        {
+            CoalescedGridView.Refresh();
+            TeamGridView.Refresh();
+            RegistrantsGridView.Refresh();
+            IndividualGridView.Refresh();
         }
     }
 }

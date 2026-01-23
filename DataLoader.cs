@@ -28,6 +28,9 @@ namespace WYSAPlayerRanker
             AdditionalComments = 13
         }
 
+        /// <summary>
+        /// Given an exported xlsx from sportsconnect "age group report", loads a list of registered players
+        /// </summary
         public static List<PlayerRegistrationData> LoadRegisteredPlayers(string filePath)
         {
             var registeredPlayers = new List<PlayerRegistrationData>();
@@ -80,6 +83,9 @@ namespace WYSAPlayerRanker
             return registeredPlayers;
         }
 
+        /// <summary>
+        /// Given a coach eval xlsx file path, loads a list of SeasonPlayerData
+        /// </summary>
         public static List<SeasonPlayerData> LoadPlayersFromExcel(string filePath)
         {
             var players = new List<SeasonPlayerData>();
@@ -142,6 +148,57 @@ namespace WYSAPlayerRanker
                 }
             }
 
+            return players;
+        }
+
+        /// <summary>
+        /// Loads a list of CoalescedPlayerData from last season's master player list
+        /// with coach eval populated as "previous season score" and 
+        /// </summary>
+        public static List<CoalescedPlayerData> LoadMasterList(string filePath)
+        {
+            var players = new List<CoalescedPlayerData>();
+            // Set EPPlus license context (required for EPPlus 5.0+)
+            ExcelPackage.License.SetNonCommercialOrganization("Westford Youth Soccer Association");
+            using (var package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                ExcelWorksheet worksheet = null;
+                foreach (var currentWorksheet in package.Workbook.Worksheets)
+                {
+                    if (currentWorksheet.Cells[1, 1]?.GetValue<string>() != "Program")
+                    {
+                        continue;
+                    }
+                    worksheet = currentWorksheet;
+                    break;
+                }
+                int rowCount = worksheet?.Dimension?.Rows ?? 0;
+                // Assuming first row contains headers
+                for (int row = 2; row <= rowCount; row++)
+                {
+                    try
+                    {
+                        var player = new CoalescedPlayerData();
+                        player.FullName = worksheet.Cells[row, 2].GetValue<string>() + " " +
+                            worksheet.Cells[row, 3].GetValue<string>();
+                        player.PreviousSeasonScore = worksheet.Cells[row, 12].GetValue<double>();
+                        player.EvalScore = worksheet.Cells[row, 13].GetValue<double>();
+                        player.PreviousTeamDivision = worksheet.Cells[row, 8].GetValue<int>();
+
+                        if (string.IsNullOrWhiteSpace(player.FullName))
+                        {
+                            // Skip empty rows
+                            continue;
+                        }
+                        players.Add(player);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log or handle parsing errors for individual rows
+                        System.Diagnostics.Debug.WriteLine($"Error parsing row {row}: {ex.Message}");
+                    }
+                }
+            }
             return players;
         }
 

@@ -46,7 +46,7 @@ namespace WYSAPlayerRanker
         public static void CalculateCombinedScore(this CoalescedPlayerData playerData, ApplicationSettings appSettings)
         {
             double divisionMultiplier = 1;
-            if (playerData.PreviousTeamDivision >= 0 && playerData.PreviousTeamDivision < appSettings.DivisionWeights.Count)
+            if (playerData.PreviousTeamDivision > 0 && playerData.PreviousTeamDivision < appSettings.DivisionWeights.Count)
             {
                 divisionMultiplier = appSettings.DivisionWeights[playerData.PreviousTeamDivision - 1];
             }
@@ -71,7 +71,9 @@ namespace WYSAPlayerRanker
             // only previous season and eval scores
             else if (playerData.CurrentSeasonScore == 0 && playerData.PreviousSeasonScore > 0 && playerData.EvalScore > 0)
             {
-                playerData.CombinedScore = ((playerData.PreviousSeasonScore * appSettings.PreviousSeasonWeight) * divisionMultiplier +
+                // treat previous season score as weighted by both season weights
+                double seasonWeight = appSettings.PreviousSeasonWeight + appSettings.CurrentSeasonWeight;
+                playerData.CombinedScore = ((playerData.PreviousSeasonScore * seasonWeight) * divisionMultiplier +
                         (playerData.EvalScore * appSettings.EvalWeight));
             }
             // only current season scores: just  current season score, with division weight
@@ -82,14 +84,17 @@ namespace WYSAPlayerRanker
             // only current season and eval scores
             else if (playerData.CurrentSeasonScore > 0 && playerData.PreviousSeasonScore == 0 && playerData.EvalScore > 0)
             {
-                playerData.CombinedScore = ((playerData.CurrentSeasonScore * appSettings.CurrentSeasonWeight) * divisionMultiplier +
+                double seasonWeight = appSettings.PreviousSeasonWeight + appSettings.CurrentSeasonWeight;
+                playerData.CombinedScore = ((playerData.CurrentSeasonScore * seasonWeight) * divisionMultiplier +
                         (playerData.EvalScore * appSettings.EvalWeight));
             }
             // only current and previous season scores
             else if (playerData.CurrentSeasonScore > 0 && playerData.PreviousSeasonScore > 0 && playerData.EvalScore == 0)
             {
-                playerData.CombinedScore = ((playerData.CurrentSeasonScore * appSettings.CurrentSeasonWeight) * divisionMultiplier +
-                        (playerData.PreviousSeasonScore * appSettings.PreviousSeasonWeight) * divisionMultiplier);
+                double currentSeasonWeight = appSettings.CurrentSeasonWeight + appSettings.EvalWeight / 2.0;
+                double previousSeasonWeight = appSettings.PreviousSeasonWeight + appSettings.EvalWeight / 2.0;
+                playerData.CombinedScore = ((playerData.CurrentSeasonScore * currentSeasonWeight) * divisionMultiplier +
+                        (playerData.PreviousSeasonScore * previousSeasonWeight) * divisionMultiplier);
             }
             // all three scores available: use complete formula
             else

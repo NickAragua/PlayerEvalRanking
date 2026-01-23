@@ -72,6 +72,26 @@ namespace WYSAPlayerRanker
             }
         }
 
+        public void ImportFromLastSeasonMasterList(List<CoalescedPlayerData> lastSeasonPlayers)
+        {
+            CreateBackup();
+
+            foreach (CoalescedPlayerData player in lastSeasonPlayers)
+            {
+                if (!CoalescedPlayerDataByName.ContainsKey(player.Key))
+                {
+                    CoalescedPlayerDataByName.Add(player.Key, player);
+                }
+                else
+                {
+                    CoalescedPlayerDataByName[player.Key].PreviousSeasonScore = player.PreviousSeasonScore;
+                    CoalescedPlayerDataByName[player.Key].EvalScore = player.EvalScore;
+                }
+
+                CoalescedPlayerDataByName[player.Key].CalculateCombinedScore(ApplicationSettings);
+            }
+        }
+
         public string ProcessIndividualPlayer(SeasonPlayerData player, PlayerOperationType operationType)
         {
             AddPlayerToRawDatabase(player);
@@ -93,6 +113,7 @@ namespace WYSAPlayerRanker
                 coalescedPlayerData = CoalescedPlayerDataByName[player.Key];
             }
 
+            // math issue: merging multiple evaluations from the same season should produce average instead of overwriting.
             switch (operationType)
             {
                 case PlayerOperationType.CurrentSeason:
@@ -125,7 +146,13 @@ namespace WYSAPlayerRanker
             return activityLog;
         }
 
-        
+        public void RecalculatePlayerScores()
+        {
+            foreach (var kvp in CoalescedPlayerDataByName)
+            {
+                kvp.Value.CalculateCombinedScore(ApplicationSettings);
+            }
+        }
 
         public void MovePlayerToTeam(CoalescedPlayerData playerData, string teamName)
         {

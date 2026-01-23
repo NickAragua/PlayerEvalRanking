@@ -19,6 +19,11 @@ namespace WYSAPlayerRanker
             txtCurrentSeasonWeight.Text = appSettings.CurrentSeasonWeight.ToString();
             txtPrevSeasonWeight.Text = appSettings.PreviousSeasonWeight.ToString();
             txtEvalWeight.Text = appSettings.EvalWeight.ToString();
+            txtDiv1Weight.Text = appSettings.DivisionWeights[0].ToString();
+            txtDiv2Weight.Text = appSettings.DivisionWeights[1].ToString();
+            txtDiv3Weight.Text = appSettings.DivisionWeights[2].ToString();
+            txtDiv4Weight.Text = appSettings.DivisionWeights[3].ToString();
+            txtDiv5Weight.Text = appSettings.DivisionWeights[4].ToString();
             chkAutosave.Checked = appSettings.AutoSave;
         }
 
@@ -46,6 +51,10 @@ namespace WYSAPlayerRanker
             appSettings.DivisionWeights[4] = Double.Parse(txtDiv5Weight.Text);
 
             appSettings.AutoSave = chkAutosave.Checked;
+
+            DataStore.RecalculatePlayerScores();
+
+            ((Form1) Owner).RefreshViews();
 
             Close();
         }
