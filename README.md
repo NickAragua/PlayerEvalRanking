@@ -9,7 +9,9 @@ If you mess up and want to undo your last "merge", click the "Undo" button.
 
 TODO: Integrate previous season and end-of-spring eval scores
 
-To start building teams, click "add new team", then start dragging and dropping players from the coalesced list in the top left. 
+To start building teams, click "add new team", then start dragging and dropping players from the coalesced list in the top left to the team list in the bottom left.
+If you want to move a player off a team or to another team, drag and drop them up to the coalesced list and then back to the other team.
 
-TODO: remove players from the coalesced list? Yeah, probably. 
 TODO: cross check against 'registered player list' to see if player being assigned to team is actually registered. Or maybe highlight them in red or something.
+TODO: save and load current state
+TODO: export team list as "presentable" excel file
