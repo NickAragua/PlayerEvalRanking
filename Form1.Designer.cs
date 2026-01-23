@@ -54,7 +54,6 @@
             this.CoalescedGridView.ReadOnly = true;
             this.CoalescedGridView.Size = new System.Drawing.Size(638, 390);
             this.CoalescedGridView.TabIndex = 1;
-            this.CoalescedGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CoalescedPlayerView_CellContentClick);
             // 
             // IndividualGridView
             // 
@@ -66,7 +65,6 @@
             this.IndividualGridView.ReadOnly = true;
             this.IndividualGridView.Size = new System.Drawing.Size(624, 390);
             this.IndividualGridView.TabIndex = 2;
-            this.IndividualGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // btnMergeEval
             // 
