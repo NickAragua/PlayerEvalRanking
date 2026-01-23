@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WYSAPlayerRanker.DataStructures;
 
@@ -23,6 +25,7 @@ namespace WYSAPlayerRanker
         public Dictionary<string, SeasonPlayerData> PreviousRawPlayerDatabase { get; set; } = new Dictionary<string, SeasonPlayerData>();
 
         public Dictionary<string, CoalescedPlayerData> CoalescedPlayerDataByName { get; set; } = new Dictionary<string, CoalescedPlayerData>();
+        
         public Dictionary<string, CoalescedPlayerData> PreviousCoalescedData { get; set; } = new Dictionary<string, CoalescedPlayerData>();
 
         public Dictionary<string, List<CoalescedPlayerData>> Teams { get; set; } = new Dictionary<string, List<CoalescedPlayerData>>();
@@ -199,6 +202,22 @@ namespace WYSAPlayerRanker
         public List<String> GetTeamNames()
         {
             return Teams.Keys.ToList();
+        }
+
+        public void Serialize(string fileName)
+        {
+            string serializedData = JsonSerializer.Serialize(this);
+            FileInfo destinationFile = new FileInfo(fileName);
+            File.WriteAllText(destinationFile.FullName, serializedData);
+        }
+
+        public static PlayerRankingDataStore Deserialize(string fileName)
+        {
+            FileInfo sourceFile = new FileInfo(fileName);
+            string serializedData = File.ReadAllText(sourceFile.FullName);
+            PlayerRankingDataStore deserializedStore = JsonSerializer.Deserialize<PlayerRankingDataStore>(serializedData);
+
+            return deserializedStore;
         }
     }
 }

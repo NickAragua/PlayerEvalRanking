@@ -417,5 +417,68 @@ namespace WYSAPlayerRanker
 
             CoalescedGridView.DataSource = sortedData.ToList();
         }
+
+        private void btnSaveState_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
+                saveFileDialog.DefaultExt = "json";
+                saveFileDialog.AddExtension = true;
+                saveFileDialog.FileName = "PlayerRankingState";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        dataStore.Serialize(saveFileDialog.FileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error saving state: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void btnLoadState_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
+                openFileDialog.DefaultExt = "json";
+                openFileDialog.CheckFileExists = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        dataStore = PlayerRankingDataStore.Deserialize(openFileDialog.FileName);
+
+                        // Refresh all grids to display loaded data
+                        CoalescedGridView.DataSource = dataStore.CoalescedPlayerDataByName.Values.ToList();
+                        CoalescedGridView.Refresh();
+
+                        cboSelectedTeam.DataSource = dataStore.GetTeamNames();
+                        cboSelectedTeam.Refresh();
+
+                        if (cboSelectedTeam.Items.Count > 0)
+                        {
+                            cboSelectedTeam.SelectedIndex = 0;
+                        }
+
+                        TeamGridView.DataSource = dataStore.GetTeam(cboSelectedTeam.SelectedItem.ToString());
+                        TeamGridView.Refresh();
+
+                        RegistrantsGridView.DataSource = dataStore.RegisteredPlayers.Values.ToList();
+                        RegistrantsGridView.Refresh();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error loading state: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
     }
 }

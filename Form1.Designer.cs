@@ -38,6 +38,9 @@
             this.btnAddNewTeam = new System.Windows.Forms.Button();
             this.btnRemoveTeam = new System.Windows.Forms.Button();
             this.RegistrantsGridView = new System.Windows.Forms.DataGridView();
+            this.btnSaveState = new System.Windows.Forms.Button();
+            this.btnLoadState = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.CoalescedGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.IndividualGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TeamGridView)).BeginInit();
@@ -144,11 +147,43 @@
             this.RegistrantsGridView.Size = new System.Drawing.Size(624, 430);
             this.RegistrantsGridView.TabIndex = 10;
             // 
+            // btnSaveState
+            // 
+            this.btnSaveState.Location = new System.Drawing.Point(337, 397);
+            this.btnSaveState.Name = "btnSaveState";
+            this.btnSaveState.Size = new System.Drawing.Size(75, 23);
+            this.btnSaveState.TabIndex = 12;
+            this.btnSaveState.Text = "Save";
+            this.btnSaveState.UseVisualStyleBackColor = true;
+            this.btnSaveState.Click += new System.EventHandler(this.btnSaveState_Click);
+            // 
+            // btnLoadState
+            // 
+            this.btnLoadState.Location = new System.Drawing.Point(419, 398);
+            this.btnLoadState.Name = "btnLoadState";
+            this.btnLoadState.Size = new System.Drawing.Size(75, 23);
+            this.btnLoadState.TabIndex = 13;
+            this.btnLoadState.Text = "Load";
+            this.btnLoadState.UseVisualStyleBackColor = true;
+            this.btnLoadState.Click += new System.EventHandler(this.btnLoadState_Click);
+            // 
+            // btnExport
+            // 
+            this.btnExport.Location = new System.Drawing.Point(501, 397);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(75, 23);
+            this.btnExport.TabIndex = 14;
+            this.btnExport.Text = "Export";
+            this.btnExport.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1271, 870);
+            this.Controls.Add(this.btnExport);
+            this.Controls.Add(this.btnLoadState);
+            this.Controls.Add(this.btnSaveState);
             this.Controls.Add(this.RegistrantsGridView);
             this.Controls.Add(this.btnRemoveTeam);
             this.Controls.Add(this.btnAddNewTeam);
@@ -180,6 +215,9 @@
         private System.Windows.Forms.Button btnAddNewTeam;
         private System.Windows.Forms.Button btnRemoveTeam;
         private System.Windows.Forms.DataGridView RegistrantsGridView;
+        private System.Windows.Forms.Button btnSaveState;
+        private System.Windows.Forms.Button btnLoadState;
+        private System.Windows.Forms.Button btnExport;
     }
 }
 
