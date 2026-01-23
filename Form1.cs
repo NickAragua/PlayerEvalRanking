@@ -7,6 +7,12 @@ namespace WYSAPlayerRanker
 {
     public partial class Form1 : Form
     {
+        private class DragDropData
+        {
+            public CoalescedPlayerData PlayerData { get; set; }
+            public string SourceGridView { get; set; }
+        }
+
         PlayerRankingDataStore dataStore = new PlayerRankingDataStore();
 
         public Form1()
@@ -27,12 +33,12 @@ namespace WYSAPlayerRanker
 
         private void InitializeCoalescedGridViewDragDrop()
         {
-            /*TeamGridView.MouseDown += TeamGridView_MouseDown;
+            TeamGridView.MouseDown += TeamGridView_MouseDown;
 
             // Configure CoalescedGridView as drop target
             CoalescedGridView.AllowDrop = true;
             CoalescedGridView.DragEnter += CoalescedGridView_DragEnter;
-            CoalescedGridView.DragDrop += CoalescedGridView_DragDrop;*/
+            CoalescedGridView.DragDrop += CoalescedGridView_DragDrop;
         }
 
         private void InitializeTeamGridViewDragDrop()
@@ -69,14 +75,19 @@ namespace WYSAPlayerRanker
 
                 if (selectedPlayer != null)
                 {
-                    TeamGridView.DoDragDrop(selectedPlayer, DragDropEffects.Move);
+                    DragDropData dropData = new DragDropData
+                    {
+                        PlayerData = selectedPlayer,
+                        SourceGridView = "TeamGridView"
+                    };
+                    TeamGridView.DoDragDrop(dropData, DragDropEffects.Move);
                 }
             }
         }
 
         private void CoalescedGridView_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(typeof(CoalescedPlayerData)))
+            if (e.Data.GetDataPresent(typeof(DragDropData)))
             {
                 e.Effect = DragDropEffects.Move;
             }
@@ -88,14 +99,19 @@ namespace WYSAPlayerRanker
 
         private void CoalescedGridView_DragDrop(object sender, DragEventArgs e)
         {
-            if (sender != TeamGridView ||
-                !e.Data.GetDataPresent(typeof(CoalescedPlayerData)))
+            if (!e.Data.GetDataPresent(typeof(DragDropData)))
             {
                 return;
             }
 
-            CoalescedPlayerData droppedPlayer = e.Data.GetData(typeof(CoalescedPlayerData)) as CoalescedPlayerData;
-            string selectedTeam = cboSelectedTeam.SelectedItem.ToString();
+            DragDropData dropData = e.Data.GetData(typeof(DragDropData)) as DragDropData;
+            if (dropData == null || dropData.SourceGridView != "TeamGridView")
+            {
+                return;
+            }
+
+            CoalescedPlayerData droppedPlayer = dropData.PlayerData;
+            string selectedTeam = cboSelectedTeam?.SelectedItem?.ToString();
 
             if (droppedPlayer != null)
             {
@@ -123,14 +139,19 @@ namespace WYSAPlayerRanker
 
                 if (selectedPlayer != null)
                 {
-                    CoalescedGridView.DoDragDrop(selectedPlayer, DragDropEffects.Move);
+                    DragDropData dropData = new DragDropData
+                    {
+                        PlayerData = selectedPlayer,
+                        SourceGridView = "CoalescedGridView"
+                    };
+                    CoalescedGridView.DoDragDrop(dropData, DragDropEffects.Move);
                 }
             }
         }
 
         private void TeamGridView_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(typeof(CoalescedPlayerData)))
+            if (e.Data.GetDataPresent(typeof(DragDropData)))
             {
                 e.Effect = DragDropEffects.Move;
             }
@@ -142,7 +163,7 @@ namespace WYSAPlayerRanker
 
         private void TeamGridView_DragDrop(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent(typeof(CoalescedPlayerData)))
+            if (!e.Data.GetDataPresent(typeof(DragDropData)))
             {
                 return;
             }
@@ -154,7 +175,14 @@ namespace WYSAPlayerRanker
                 return;
             }
 
-            CoalescedPlayerData droppedPlayer = e.Data.GetData(typeof(CoalescedPlayerData)) as CoalescedPlayerData;
+            DragDropData dropData = e.Data.GetData(typeof(DragDropData)) as DragDropData;
+
+            if (dropData == null || dropData.SourceGridView != "CoalescedGridView")
+            {
+                return;
+            }
+
+            CoalescedPlayerData droppedPlayer = dropData.PlayerData;
             string selectedTeam = cboSelectedTeam.SelectedItem.ToString();
 
             if (droppedPlayer != null)
