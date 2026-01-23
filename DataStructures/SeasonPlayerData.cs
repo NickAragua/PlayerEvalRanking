@@ -64,12 +64,19 @@ namespace WYSAPlayerRanker
         public string Comments { get; set; }
         public bool RedFlag { get; set; }
 
-        // used as a key in the data store as well
         public string FullName
         {
             get
             {
                 return $"{FirstName} {LastName}";
+            }
+        }
+
+        public string Key
+        {
+            get
+            {
+                return FullName.ToLower();
             }
         }
     }

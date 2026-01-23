@@ -37,5 +37,13 @@ namespace WYSAPlayerRanker
             // Example weighted average calculation
             return (CurrentSeasonScore * 0.4) + (PreviousSeasonScore * 0.3) + (EvalScore * 0.3);
         }
+
+        public string Key
+        {
+            get
+            {
+                return FullName.ToLower();
+            }
+        }
     }
 }

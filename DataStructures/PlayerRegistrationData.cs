@@ -12,9 +12,20 @@ namespace WYSAPlayerRanker.DataStructures
         public string LastName { get; set; }
         public int GradeLevel { get; set; }
 
-        public string GetFullName()
+        public string FullName
         {
-            return $"{FirstName} {LastName}";
+            get
+            {
+                return $"{FirstName} {LastName}";
+            }
+        }
+
+        public string Key
+        {
+            get
+            {
+                return FullName.ToLower();
+            }
         }
     }
 }

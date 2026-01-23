@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using WYSAPlayerRanker.DataStructures;
@@ -76,18 +77,18 @@ namespace WYSAPlayerRanker
             String activityLog = String.Empty;
             CoalescedPlayerData coalescedPlayerData;
 
-            if (!CoalescedPlayerDataByName.ContainsKey(player.FullName))
+            if (!CoalescedPlayerDataByName.ContainsKey(player.Key))
             {
                 coalescedPlayerData = new CoalescedPlayerData()
                 {
                     FullName = player.FullName
                 };
 
-                CoalescedPlayerDataByName.Add(player.FullName, coalescedPlayerData);
+                CoalescedPlayerDataByName.Add(player.Key, coalescedPlayerData);
             } 
             else
             {
-                coalescedPlayerData = CoalescedPlayerDataByName[player.FullName];
+                coalescedPlayerData = CoalescedPlayerDataByName[player.Key];
             }
 
             switch (operationType)
@@ -101,9 +102,9 @@ namespace WYSAPlayerRanker
                 //case PlayerOperationType.Eval:
             }
 
-            if (RegisteredPlayers.ContainsKey(player.FullName))
+            if (RegisteredPlayers.ContainsKey(player.Key))
             {
-                coalescedPlayerData.GradeLevel = RegisteredPlayers[player.FullName].GradeLevel;
+                coalescedPlayerData.GradeLevel = RegisteredPlayers[player.Key].GradeLevel;
             }
 
             coalescedPlayerData.PreviousTeam = player.TeamName;
@@ -111,15 +112,42 @@ namespace WYSAPlayerRanker
 
             return activityLog;
         }
+
+        public void MovePlayerToTeam(CoalescedPlayerData playerData, string teamName)
+        {
+            CreateBackup();
+            RemovePlayerFromCoalescedList(playerData);
+            AddPlayerToTeam(teamName, playerData);
+        }
+
+        public void RemovePlayerFromTeam(CoalescedPlayerData playerData, string teamName)
+        {
+            CreateBackup();
+
+            if (!CoalescedPlayerDataByName.ContainsKey(playerData.Key))
+            {
+                CoalescedPlayerDataByName.Add(playerData.Key, playerData);
+            }
+
+            RemovePlayerFromTeam(teamName, playerData);
+        }
+
+        public void RemovePlayerFromCoalescedList(CoalescedPlayerData playerData)
+        {
+            if(CoalescedPlayerDataByName.ContainsKey(playerData.Key))
+            {
+                CoalescedPlayerDataByName.Remove(playerData.Key);
+            }
+        }
         
         public void ProcessRegisteredPlayers(List<PlayerRegistrationData> registrants)
         {
             RegisteredPlayers.Clear();
             foreach (var registrant in registrants)
             {
-                if (!RegisteredPlayers.ContainsKey(registrant.GetFullName()))
+                if (!RegisteredPlayers.ContainsKey(registrant.Key))
                 {
-                    RegisteredPlayers.Add(registrant.GetFullName(), registrant);
+                    RegisteredPlayers.Add(registrant.Key, registrant);
                 }
             }
         }

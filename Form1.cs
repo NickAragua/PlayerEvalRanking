@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WYSAPlayerRanker
 {
     public partial class Form1 : Form
     {
+        private class DragDropData
+        {
+            public CoalescedPlayerData PlayerData { get; set; }
+            public string SourceGridView { get; set; }
+        }
+
         PlayerRankingDataStore dataStore = new PlayerRankingDataStore();
 
         public Form1()
@@ -19,6 +20,7 @@ namespace WYSAPlayerRanker
             InitializeComponent();
             EnableIndividualGridViewDragAndDrop();
             InitializeTeamGridViewDragDrop();
+            InitializeCoalescedGridViewDragDrop();
             EnableRegistrantsGridViewDragDrop();
         }
 
@@ -27,6 +29,16 @@ namespace WYSAPlayerRanker
             IndividualGridView.AllowDrop = true;
             IndividualGridView.DragEnter += IndividualGridView_DragEnter;
             IndividualGridView.DragDrop += IndividualGridView_DragDrop;
+        }
+
+        private void InitializeCoalescedGridViewDragDrop()
+        {
+            TeamGridView.MouseDown += TeamGridView_MouseDown;
+
+            // Configure CoalescedGridView as drop target
+            CoalescedGridView.AllowDrop = true;
+            CoalescedGridView.DragEnter += CoalescedGridView_DragEnter;
+            CoalescedGridView.DragDrop += CoalescedGridView_DragDrop;
         }
 
         private void InitializeTeamGridViewDragDrop()
@@ -48,6 +60,76 @@ namespace WYSAPlayerRanker
             RegistrantsGridView.DragDrop += RegistrantsGridView_DragDrop;
         }
 
+        private void TeamGridView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (TeamGridView.HitTest(e.X, e.Y).RowIndex >= 0)
+            {
+                int rowIndex = TeamGridView.HitTest(e.X, e.Y).RowIndex;
+
+                if (rowIndex < 0 || rowIndex >= TeamGridView.Rows.Count)
+                {
+                    return;
+                }
+
+                CoalescedPlayerData selectedPlayer = TeamGridView.Rows[rowIndex].DataBoundItem as CoalescedPlayerData;
+
+                if (selectedPlayer != null)
+                {
+                    DragDropData dropData = new DragDropData
+                    {
+                        PlayerData = selectedPlayer,
+                        SourceGridView = "TeamGridView"
+                    };
+                    TeamGridView.DoDragDrop(dropData, DragDropEffects.Move);
+                }
+            }
+        }
+
+        private void CoalescedGridView_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(DragDropData)))
+            {
+                e.Effect = DragDropEffects.Move;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void CoalescedGridView_DragDrop(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(typeof(DragDropData)))
+            {
+                return;
+            }
+
+            DragDropData dropData = e.Data.GetData(typeof(DragDropData)) as DragDropData;
+            if (dropData == null || dropData.SourceGridView != "TeamGridView")
+            {
+                return;
+            }
+
+            CoalescedPlayerData droppedPlayer = dropData.PlayerData;
+            string selectedTeam = cboSelectedTeam?.SelectedItem?.ToString();
+
+            if (droppedPlayer != null)
+            {
+                // Add player to the selected team
+                dataStore.RemovePlayerFromTeam(droppedPlayer, selectedTeam);
+            }
+
+            CoalescedGridView.DataSource = null;
+            CoalescedGridView.DataSource = dataStore.CoalescedPlayerDataByName.Values.ToList();
+            CoalescedGridView.Refresh();
+
+            // Refresh TeamGridView with the updated team roster
+            TeamGridView.ClearSelection();
+            TeamGridView.DataSource = null;
+            TeamGridView.DataSource = dataStore.GetTeam(selectedTeam);
+            TeamGridView.Refresh();
+        }
+
         private void CoalescedGridView_MouseDown(object sender, MouseEventArgs e)
         {
             if (CoalescedGridView.HitTest(e.X, e.Y).RowIndex >= 0)
@@ -57,14 +139,19 @@ namespace WYSAPlayerRanker
 
                 if (selectedPlayer != null)
                 {
-                    CoalescedGridView.DoDragDrop(selectedPlayer, DragDropEffects.Move);
+                    DragDropData dropData = new DragDropData
+                    {
+                        PlayerData = selectedPlayer,
+                        SourceGridView = "CoalescedGridView"
+                    };
+                    CoalescedGridView.DoDragDrop(dropData, DragDropEffects.Move);
                 }
             }
         }
 
         private void TeamGridView_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(typeof(CoalescedPlayerData)))
+            if (e.Data.GetDataPresent(typeof(DragDropData)))
             {
                 e.Effect = DragDropEffects.Move;
             }
@@ -76,7 +163,7 @@ namespace WYSAPlayerRanker
 
         private void TeamGridView_DragDrop(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent(typeof(CoalescedPlayerData)))
+            if (!e.Data.GetDataPresent(typeof(DragDropData)))
             {
                 return;
             }
@@ -88,14 +175,25 @@ namespace WYSAPlayerRanker
                 return;
             }
 
-            CoalescedPlayerData droppedPlayer = e.Data.GetData(typeof(CoalescedPlayerData)) as CoalescedPlayerData;
+            DragDropData dropData = e.Data.GetData(typeof(DragDropData)) as DragDropData;
+
+            if (dropData == null || dropData.SourceGridView != "CoalescedGridView")
+            {
+                return;
+            }
+
+            CoalescedPlayerData droppedPlayer = dropData.PlayerData;
             string selectedTeam = cboSelectedTeam.SelectedItem.ToString();
 
             if (droppedPlayer != null)
             {
                 // Add player to the selected team
-                dataStore.AddPlayerToTeam(selectedTeam, droppedPlayer);
+                dataStore.MovePlayerToTeam(droppedPlayer, selectedTeam);
             }
+
+            CoalescedGridView.DataSource = null;
+            CoalescedGridView.DataSource = dataStore.CoalescedPlayerDataByName.Values.ToList();
+            CoalescedGridView.Refresh();
 
             // Refresh TeamGridView with the updated team roster
             TeamGridView.DataSource = null;
@@ -164,18 +262,14 @@ namespace WYSAPlayerRanker
             }
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void CoalescedPlayerView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
+            if (IndividualGridView.DataSource == null)
+            {
+                MessageBox.Show("Please load individual player data first by dragging and dropping an Excel file onto the Individual Player Data grid.", "No Data Loaded", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             dataStore.CreateBackup();
 
             foreach (SeasonPlayerData playerData in IndividualGridView.DataSource as List<SeasonPlayerData>)
@@ -185,6 +279,9 @@ namespace WYSAPlayerRanker
 
             CoalescedGridView.DataSource = dataStore.CoalescedPlayerDataByName.Values.ToList();
             CoalescedGridView.Refresh();
+
+            IndividualGridView.DataSource = null;
+            IndividualGridView.Refresh();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -224,8 +321,11 @@ namespace WYSAPlayerRanker
 
         private void cboSelectedTeam_SelectedIndexChanged(object sender, EventArgs e)
         {
-            TeamGridView.DataSource = dataStore.GetTeam(cboSelectedTeam.SelectedItem.ToString());
-            TeamGridView.Refresh();
+            if (cboSelectedTeam.SelectedItem != null)
+            {
+                TeamGridView.DataSource = dataStore.GetTeam(cboSelectedTeam.SelectedItem.ToString());
+                TeamGridView.Refresh();
+            }
         }
     }
 }
