@@ -593,6 +593,13 @@ namespace WYSAPlayerRanker
             settingsDialog.ShowDialog();
         }
 
+        public void RefreshTeamGridView()
+        {
+            TeamGridView.DataSource = null;
+            TeamGridView.DataSource = dataStore.GetTeam(cboSelectedTeam.SelectedItem.ToString());
+            TeamGridView.Refresh();
+        }
+
         public void RefreshViews()
         {
             CoalescedGridView.Refresh();
@@ -630,6 +637,7 @@ namespace WYSAPlayerRanker
         private void btnTeamView_Click(object sender, EventArgs e)
         {
             TeamViewForm tvf = new TeamViewForm(dataStore);
+            tvf.Owner = this;
             tvf.ShowDialog();
         }
     }
