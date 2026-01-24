@@ -49,6 +49,12 @@ namespace WYSAPlayerRanker
                 lblTeam.Text = team.Key;
                 Controls.Add(lblTeam); ;
 
+                Label lblPlayerCount = new Label();
+                lblPlayerCount.Left = leftOffset + lblTeam.Width + 5;
+                lblPlayerCount.Top = topOffset;
+                lblPlayerCount.Text = $"Players: {team.Value.Count}";
+                Controls.Add(lblPlayerCount);
+
                 DataGridView dataGridView = new DataGridView();
                 dataGridView.Left = leftOffset;
                 dataGridView.Top = topOffset + lblTeam.Height;
