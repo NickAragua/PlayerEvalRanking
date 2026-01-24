@@ -167,6 +167,7 @@ namespace WYSAPlayerRanker
 
             CoalescedGridView.DataSource = null;
             CoalescedGridView.DataSource = dataStore.CoalescedPlayerDataByName.Values.ToList();
+            SortCoalescedGridView(coalescedSortColumn, coalescedSortOrder);
             CoalescedGridView.Refresh();
 
             // Refresh TeamGridView with the updated team roster
@@ -239,6 +240,7 @@ namespace WYSAPlayerRanker
 
             CoalescedGridView.DataSource = null;
             CoalescedGridView.DataSource = dataStore.CoalescedPlayerDataByName.Values.ToList();
+            SortCoalescedGridView(coalescedSortColumn, coalescedSortOrder);
             CoalescedGridView.Refresh();
 
             // Refresh TeamGridView with the updated team roster
@@ -464,10 +466,10 @@ namespace WYSAPlayerRanker
                         ? dataSource.OrderBy(p => p.HasRedFlag)
                         : dataSource.OrderByDescending(p => p.HasRedFlag);
                     break;
-                case "HasAssociatedCoach":
+                case "CombinedScore":
                     sortedData = sortOrder == SortOrder.Ascending
-                        ? dataSource.OrderBy(p => p.HasAssociatedCoach)
-                        : dataSource.OrderByDescending(p => p.HasAssociatedCoach);
+                        ? dataSource.OrderBy(p => p.CombinedScore)
+                        : dataSource.OrderByDescending(p => p.CombinedScore);
                     break;
                 case "PreviousTeam":
                     sortedData = sortOrder == SortOrder.Ascending

@@ -12,7 +12,7 @@ namespace WYSAPlayerRanker
         public double PreviousSeasonWeight { get; set; } = .3;
         public double EvalWeight { get; set; } = .3;
 
-        public List<double> DivisionWeights { get; set; } = new List<double>() { 1.0, 0.95, 0.9, 0.85, 0.8 };
+        public List<double> DivisionWeights { get; set; } = new List<double>() { 1.0, 0.94, 0.88, 0.82, 0.76 };
         public bool AutoSave { get; set; } = true;
     }
 }

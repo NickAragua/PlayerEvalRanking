@@ -157,7 +157,7 @@ namespace WYSAPlayerRanker
                 coalescedPlayerData.GradeLevel = RegisteredPlayers[player.Key].GradeLevel;
             }
 
-            if (!String.IsNullOrEmpty(coalescedPlayerData.PreviousTeam)) 
+            if (String.IsNullOrEmpty(coalescedPlayerData.PreviousTeam)) 
             {
                 coalescedPlayerData.PreviousTeam = player.TeamName;
             }
