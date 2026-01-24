@@ -1,20 +1,14 @@
 A windows desktop utility for importing and coalescing player records, as well as building teams.
 
 How to build teams:
-1) Log in to the web site and export the "Grade X/Y" shared report as excel. Drag and drop this to the gray box/grid in the bottom right corner of the application. That's your "registered player list".
-
-2) Take one or more coach evals. Drag and drop them to gray box/grid in the top right corner of the application. Review the data, then click 'Merge Eval'. This will move the player records to the
+- Log in to the web site and export the "Grade X/Y" shared report as excel. Drag and drop this to the gray box/grid in the bottom right corner of the application. That's your "registered player list".
+- Take one or more coach evals. Drag and drop them to gray box/grid in the top right corner of the application. Review the data, then click 'Merge Eval'. This will move the player records to the
 top left box, the "Coalesced Player List". This can be done as many times as you have coach evals.
-
-2a) If you want to play around with the weights attached to the current/previous season/assessment scores and the player division, you can do that via "settings".
-
-3) To import assessment and previous season scores from the "master player list" file that you may have gotten last season, drag and drop it to the coalesced player list and it will be integrated.
-
-4) When you are ready to start building teams, click 'create team' one or more times, then drag and drop players from the coalesced player list to the current team.
-
-4a) If you want to conveniently move players between teams, click 'Team View' and drag and drop players between teams there.
-
-5) Once satisfied with your teams, click 'export'. This will export the teams into a spreadsheet similar to what we send in when building teams, but less pretty looking. Sorry.
+- If you want to play around with the weights attached to the current/previous season/assessment scores and the player division, you can do that via "settings".
+- To import assessment and previous season scores from the "master player list" file that you may have gotten last season, drag and drop it to the coalesced player list and it will be integrated.
+- When you are ready to start building teams, click 'create team' one or more times, then drag and drop players from the coalesced player list to the current team.
+- If you want to conveniently move players between teams, click 'Team View' and drag and drop players between teams there.
+- Once satisfied with your teams, click 'export'. This will export the teams into a spreadsheet similar to what we send in when building teams, but less pretty looking. Sorry.
 
 Some notes:
 
