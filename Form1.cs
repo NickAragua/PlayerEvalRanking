@@ -626,5 +626,11 @@ namespace WYSAPlayerRanker
                 }
             }
         }
+
+        private void btnTeamView_Click(object sender, EventArgs e)
+        {
+            TeamViewForm tvf = new TeamViewForm(dataStore);
+            tvf.ShowDialog();
+        }
     }
 }

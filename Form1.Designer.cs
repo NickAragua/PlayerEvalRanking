@@ -42,6 +42,7 @@
             this.btnLoadState = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
+            this.btnTeamView = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.CoalescedGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.IndividualGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TeamGridView)).BeginInit();
@@ -88,6 +89,7 @@
             this.button1.TabIndex = 4;
             this.button1.Text = "Merge Previous Season Eval";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
@@ -188,11 +190,22 @@
             this.btnSettings.UseVisualStyleBackColor = true;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
+            // btnTeamView
+            // 
+            this.btnTeamView.Location = new System.Drawing.Point(1000, 399);
+            this.btnTeamView.Name = "btnTeamView";
+            this.btnTeamView.Size = new System.Drawing.Size(75, 23);
+            this.btnTeamView.TabIndex = 16;
+            this.btnTeamView.Text = "Team View";
+            this.btnTeamView.UseVisualStyleBackColor = true;
+            this.btnTeamView.Click += new System.EventHandler(this.btnTeamView_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1271, 870);
+            this.Controls.Add(this.btnTeamView);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.btnExport);
             this.Controls.Add(this.btnLoadState);
@@ -232,6 +245,7 @@
         private System.Windows.Forms.Button btnLoadState;
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Button btnSettings;
+        private System.Windows.Forms.Button btnTeamView;
     }
 }
 
