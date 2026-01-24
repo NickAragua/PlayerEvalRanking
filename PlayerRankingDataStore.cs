@@ -35,6 +35,11 @@ namespace WYSAPlayerRanker
         { 
             CopyCoalescedData(CoalescedPlayerDataByName, PreviousCoalescedData);
             CopyRawData(RawPlayerDatabase, PreviousRawPlayerDatabase);
+
+            if (ApplicationSettings.AutoSave) 
+            { 
+                Serialize("autosave_player_rankings.json");
+            }
         }
         
         public void RestoreFromBackup()

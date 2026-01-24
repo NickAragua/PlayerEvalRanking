@@ -265,14 +265,25 @@ namespace WYSAPlayerRanker
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                string excelFile = files.FirstOrDefault(f => f.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase));
 
-                if (excelFile != null)
+                List<SeasonPlayerData> accumulator = new List<SeasonPlayerData>();
+
+                foreach (var file in files)
                 {
-                    var loadedData = ExcelPlayerDataLoader.LoadPlayersFromExcel(excelFile);
-                    IndividualGridView.DataSource = loadedData;
-                    IndividualGridView.Refresh();
+                    if (!file.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    if (file != null)
+                    {
+                        var loadedData = ExcelPlayerDataLoader.LoadPlayersFromExcel(file);
+                        accumulator.AddRange(loadedData);
+                    }
                 }
+
+                IndividualGridView.DataSource = accumulator;
+                IndividualGridView.Refresh();
             }
         }
 
@@ -581,6 +592,32 @@ namespace WYSAPlayerRanker
             TeamGridView.Refresh();
             RegistrantsGridView.Refresh();
             IndividualGridView.Refresh();
+        }
+
+        /// <summary>
+        /// Handles the "export" button by popping up a file chooser dialog and then exporting 
+        /// teams to the specified file name.
+        /// </summary>
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "XLSX files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+                saveFileDialog.DefaultExt = "xlsx";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        ExcelPlayerDataLoader.ExportTeams(saveFileDialog.FileName, dataStore);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error loading state: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                }
+            }
         }
     }
 }

@@ -8,6 +8,11 @@ namespace WYSAPlayerRanker
 {
     public class ExcelPlayerDataLoader
     {
+        static ExcelPlayerDataLoader()
+        {
+            ExcelPackage.License.SetNonCommercialOrganization("Westford Youth Soccer Association");
+        }
+
         private const int COACH_EVAL_STARTING_ROW = 3;
 
         private enum Columns
@@ -90,9 +95,6 @@ namespace WYSAPlayerRanker
         {
             var players = new List<SeasonPlayerData>();
 
-            // Set EPPlus license context (required for EPPlus 5.0+)
-            ExcelPackage.License.SetNonCommercialOrganization("Westford Youth Soccer Association");
-
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
                 ExcelWorksheet worksheet = null;
@@ -158,8 +160,7 @@ namespace WYSAPlayerRanker
         public static List<CoalescedPlayerData> LoadMasterList(string filePath)
         {
             var players = new List<CoalescedPlayerData>();
-            // Set EPPlus license context (required for EPPlus 5.0+)
-            ExcelPackage.License.SetNonCommercialOrganization("Westford Youth Soccer Association");
+            
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
                 ExcelWorksheet worksheet = null;
@@ -200,6 +201,67 @@ namespace WYSAPlayerRanker
                 }
             }
             return players;
+        }
+
+        public static void ExportTeams(string destinationFile, PlayerRankingDataStore dataStore)
+        {
+            if(File.Exists(destinationFile)) 
+            {                 
+                File.Delete(destinationFile);
+            }
+
+            using (var package = new ExcelPackage(new FileInfo(destinationFile)))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Teams");
+
+                int tableWidth = 7;
+                int tableHeight = 21;
+                int headerHeight = 3;
+
+                int currentX = 1;
+                int currentY = 1;
+                int teamCounter = 1;
+
+                foreach (string teamKey in dataStore.Teams.Keys)
+                {
+                    AddHeaders(worksheet, teamKey, currentX, currentY);
+                    currentY += tableWidth;
+
+                    if (teamCounter % 5 == 0)
+                    {
+                        currentY = 1;
+                        currentX += tableHeight;
+                    }
+
+                }
+
+                package.Save();
+            }
+        }
+
+        private static void AddPlayers(ExcelWorksheet worksheet, int x, int y, List<CoalescedPlayerData> players)
+        {
+            int currentRow = x;
+
+            /*foreach (CoalescedPlayerData player in players)
+            {
+                worksheet.Cells[currentRow]
+                currentRow++;
+            }*/
+        }
+
+        private static void AddHeaders(ExcelWorksheet worksheet, String teamName, int x, int y)
+        {
+            worksheet.Cells[x, y].Value = "[Division Here]";
+            worksheet.Cells[x, y + 2].Value = "Coaches";
+            worksheet.Cells[x + 1, y].Value = teamName;
+            worksheet.Cells[x + 1, y + 2].Value = "[Coach List Here]";
+            worksheet.Cells[x + 2, y].Value = "Overall";
+            worksheet.Cells[x + 2, y + 1].Value = "#";
+            worksheet.Cells[x + 2, y + 2].Value = "Last Name";
+            worksheet.Cells[x + 2, y + 3].Value = "First Name";
+            worksheet.Cells[x + 2, y + 4].Value = "Grade";
+            worksheet.Cells[x + 2, y + 5].Value = "Assess";
         }
 
         private static PlacementRecommendation ParsePlacementRecommendation(string value)
