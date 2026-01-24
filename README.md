@@ -21,5 +21,3 @@ If you mess up and want to undo your last action, click 'Undo'; it will undo mos
 To save your work in progress click 'Save' and pick a destination file. To restore it, click 'Load'. 
 The utility autosaves after every meaningful action. The backup is called "autosave_player_rankings.json" and lives where your executable lives. It can be loaded via the 'Load' mechanism.
 Saves are likely not going to be compatible between versions of this application, especially if any of the data structures change. Which they will, as this is an "early alpha as-is software".
-
-TODO: Finish team view for convenient team management
