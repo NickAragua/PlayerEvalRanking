@@ -20,5 +20,3 @@ To save your work in progress click 'Save' and pick a destination file. To resto
 'Export' takes your teams and outputs them to an Excel file formatted similarly (but less pretty) to the team roster files that we submit currently.
 
 TODO: Team view for convenient team management
-
-Known issues: importing a coach eval file, merging it then importing another one and merging it will lead to incorrect math in the player eval scores
