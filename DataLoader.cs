@@ -180,8 +180,8 @@ namespace WYSAPlayerRanker
                     try
                     {
                         var player = new CoalescedPlayerData();
-                        player.FullName = worksheet.Cells[row, 2].GetValue<string>() + " " +
-                            worksheet.Cells[row, 3].GetValue<string>();
+                        player.FullName = worksheet.Cells[row, 3].GetValue<string>() + " " +
+                            worksheet.Cells[row, 2].GetValue<string>();
                         player.PreviousSeasonScore = worksheet.Cells[row, 12].GetValue<double>();
                         player.EvalScore = worksheet.Cells[row, 13].GetValue<double>();
                         player.PreviousTeamDivision = worksheet.Cells[row, 8].GetValue<int>();
@@ -220,19 +220,21 @@ namespace WYSAPlayerRanker
 
                 int currentX = 1;
                 int currentY = 1;
-                int teamCounter = 1;
+                int teamCounter = 0;
 
                 foreach (string teamKey in dataStore.Teams.Keys)
                 {
                     AddHeaders(worksheet, teamKey, currentX, currentY);
+                    AddPlayers(worksheet, currentX + headerHeight, currentY, dataStore.Teams[teamKey]);
+                    
                     currentY += tableWidth;
+                    teamCounter++;
 
                     if (teamCounter % 5 == 0)
                     {
                         currentY = 1;
                         currentX += tableHeight;
                     }
-
                 }
 
                 package.Save();
@@ -243,15 +245,20 @@ namespace WYSAPlayerRanker
         {
             int currentRow = x;
 
-            /*foreach (CoalescedPlayerData player in players)
+            foreach (CoalescedPlayerData player in players)
             {
-                worksheet.Cells[currentRow]
+                worksheet.Cells[currentRow, y].Value = player.CombinedScore.ToString("F2");
+                worksheet.Cells[currentRow, y + 2].Value = player.FullName.Split(' ')[0];
+                worksheet.Cells[currentRow, y + 3].Value = player.FullName.Split(' ')[1];
+                worksheet.Cells[currentRow, y + 4].Value = player.GradeLevel.ToString();
+                worksheet.Cells[currentRow, y + 5].Value = player.EvalScore.ToString("F2");
                 currentRow++;
-            }*/
+            }
         }
 
         private static void AddHeaders(ExcelWorksheet worksheet, String teamName, int x, int y)
         {
+            // note: x is the row, y is the column
             worksheet.Cells[x, y].Value = "[Division Here]";
             worksheet.Cells[x, y + 2].Value = "Coaches";
             worksheet.Cells[x + 1, y].Value = teamName;
