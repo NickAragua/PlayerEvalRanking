@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -272,6 +273,12 @@ namespace WYSAPlayerRanker
                 {
                     if (!file.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
                     {
+                        continue;
+                    }
+
+                    if (dataStore.ImportedEvals.Contains(Path.GetFileName(file)))
+                    {
+                        MessageBox.Show($"The file '{file}' has already been imported. Skipping duplicate.", "Duplicate File", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         continue;
                     }
 

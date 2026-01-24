@@ -17,9 +17,9 @@ namespace WYSAPlayerRanker
     public class PlayerRankingDataStore
     {
         // raw list of all player evaluations
-        public Dictionary<string, SeasonPlayerData> RawPlayerDatabase { get; set; } = new Dictionary<string, SeasonPlayerData>();
+        public Dictionary<string, List<SeasonPlayerData>> RawPlayerDatabase { get; set; } = new Dictionary<string, List<SeasonPlayerData>>();
 
-        public Dictionary<string, SeasonPlayerData> PreviousRawPlayerDatabase { get; set; } = new Dictionary<string, SeasonPlayerData>();
+        public Dictionary<string, List<SeasonPlayerData>> PreviousRawPlayerDatabase { get; set; } = new Dictionary<string, List<SeasonPlayerData>>();
 
         public Dictionary<string, CoalescedPlayerData> CoalescedPlayerDataByName { get; set; } = new Dictionary<string, CoalescedPlayerData>();
         
@@ -28,6 +28,8 @@ namespace WYSAPlayerRanker
         public Dictionary<string, List<CoalescedPlayerData>> Teams { get; set; } = new Dictionary<string, List<CoalescedPlayerData>>();
 
         public Dictionary<string, PlayerRegistrationData> RegisteredPlayers { get; set; } = new Dictionary<string, PlayerRegistrationData>();
+
+        public HashSet<string> ImportedEvals { get; set; } = new HashSet<string>();
 
         public ApplicationSettings ApplicationSettings { get; set; } = new ApplicationSettings();
 
@@ -58,22 +60,31 @@ namespace WYSAPlayerRanker
             }
         }
 
-        private void CopyRawData(Dictionary<string, SeasonPlayerData> source, Dictionary<string, SeasonPlayerData> destination)
+        private void CopyRawData(Dictionary<string, List<SeasonPlayerData>> source, Dictionary<string, List<SeasonPlayerData>> destination)
         {
             destination.Clear();
             foreach (var kvp in source)
             {
-                SeasonPlayerData copiedRecord = new SeasonPlayerData(kvp.Value);
-                destination.Add(kvp.Key, copiedRecord);
+                destination.Add(kvp.Key, new List<SeasonPlayerData>());
+                foreach (var playerRecord in kvp.Value)
+                {
+                    SeasonPlayerData copiedRecord = new SeasonPlayerData(playerRecord);
+                    destination[kvp.Key].Add(copiedRecord);
+                }
             }
         }
 
         private void AddPlayerToRawDatabase(SeasonPlayerData player)
         {
-            string key = $"{player.FullName}{player.SourceDataFile}";
+            string key = player.Key;
             if (!RawPlayerDatabase.ContainsKey(key))
             {
-                RawPlayerDatabase.Add(key, player);
+                RawPlayerDatabase.Add(key, new List<SeasonPlayerData>());
+            }
+
+            if (!RawPlayerDatabase[key].Contains(player))
+            {
+                RawPlayerDatabase[key].Add(player);
             }
         }
 
@@ -97,9 +108,30 @@ namespace WYSAPlayerRanker
             }
         }
 
+        private double CalculateAveragePlayerScore(SeasonPlayerData player)
+        {
+            if (RawPlayerDatabase.ContainsKey(player.Key))
+            {
+                double totalScore = 0.0;
+                int scoreCount = 0;
+
+                foreach (SeasonPlayerData playerData in RawPlayerDatabase[player.Key])
+                {
+                    scoreCount++;
+                    totalScore += playerData.AverageScore;
+                }
+
+                return totalScore / scoreCount;
+            }
+
+            return 0.0;
+        }
+
         public string ProcessIndividualPlayer(SeasonPlayerData player, PlayerOperationType operationType)
         {
             AddPlayerToRawDatabase(player);
+
+            ImportedEvals.Add(player.SourceDataFile);
 
             String activityLog = String.Empty;
             CoalescedPlayerData coalescedPlayerData;
@@ -118,24 +150,15 @@ namespace WYSAPlayerRanker
                 coalescedPlayerData = CoalescedPlayerDataByName[player.Key];
             }
 
-            // math issue: merging multiple evaluations from the same season should produce average instead of overwriting.
-            switch (operationType)
-            {
-                case PlayerOperationType.CurrentSeason:
-                    coalescedPlayerData.CurrentSeasonScore = player.AverageScore;
-                    break;
-                case PlayerOperationType.PreviousSeason:
-                    coalescedPlayerData.PreviousSeasonScore = player.AverageScore;
-                    break;
-                    //case PlayerOperationType.Eval:
-            }
+            coalescedPlayerData.CurrentSeasonScore = CalculateAveragePlayerScore(player);
 
             if (RegisteredPlayers.ContainsKey(player.Key))
             {
                 coalescedPlayerData.GradeLevel = RegisteredPlayers[player.Key].GradeLevel;
             }
 
-            if (!String.IsNullOrEmpty(coalescedPlayerData.PreviousTeam)) {
+            if (!String.IsNullOrEmpty(coalescedPlayerData.PreviousTeam)) 
+            {
                 coalescedPlayerData.PreviousTeam = player.TeamName;
             }
 
