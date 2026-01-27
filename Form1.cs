@@ -597,6 +597,11 @@ namespace WYSAPlayerRanker
 
         public void RefreshTeamGridView()
         {
+            if (cboSelectedTeam.SelectedItem == null)
+            {
+                return;
+            }
+
             TeamGridView.DataSource = null;
             TeamGridView.DataSource = dataStore.GetTeam(cboSelectedTeam.SelectedItem.ToString());
             TeamGridView.Refresh();

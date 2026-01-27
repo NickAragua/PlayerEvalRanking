@@ -16,8 +16,7 @@ namespace WYSAPlayerRanker
             InitializeComponent();
 
             this.dataStore = dataStore;
-            this.FormClosed += (s, e) => { ((Form1)this.Owner).RefreshTeamGridView(); };
-            ResizeEnd += (s, e) => RenderViews();
+            FormClosed += (s, e) => { ((Form1)this.Owner).RefreshTeamGridView(); };
 
             RenderViews();
         }
@@ -40,6 +39,8 @@ namespace WYSAPlayerRanker
             Controls.Clear();
             int leftOffset = 5;
             int topOffset = 5;
+            int gridCount = 1;
+            int gridHeight = 0;
 
             foreach (var team in dataStore.Teams)
             {
@@ -58,8 +59,9 @@ namespace WYSAPlayerRanker
                 DataGridView dataGridView = new DataGridView();
                 dataGridView.Left = leftOffset;
                 dataGridView.Top = topOffset + lblTeam.Height;
-                dataGridView.Width = (int) (this.Width / 3.1);
-                dataGridView.Height = (int) (this.Height / 3.1);
+                dataGridView.Width = (int) (Screen.PrimaryScreen.Bounds.Width / 3.2);
+                dataGridView.Height = gridHeight = dataGridView.ColumnHeadersHeight * 17;
+                team.Value.Sort((x, y) => -x.CombinedScore.CompareTo(y.CombinedScore)); // descending order
                 dataGridView.DataSource = team.Value;
                 dataGridView.Name = team.Key;
                 dataGridView.Refresh();
@@ -68,12 +70,17 @@ namespace WYSAPlayerRanker
                 Controls.Add(dataGridView);
 
                 leftOffset += dataGridView.Width + 5;
-                if (leftOffset + dataGridView.Width > this.Width)
+                if (gridCount % 3 == 0)
                 {
                     topOffset += dataGridView.Height + lblTeam.Height + 10;
                     leftOffset = 5;
                 }
+
+                gridCount++;
             }
+
+            this.Width = Screen.PrimaryScreen.Bounds.Width - 20;
+            this.Height = (gridHeight + topOffset) * gridCount / 3;
         }
 
         private void EnableDragAndDrop(DataGridView gridView, string teamName)
@@ -151,6 +158,7 @@ namespace WYSAPlayerRanker
                 // Remove from source team and add to target team
                 dataStore.RemovePlayerFromTeam(droppedPlayer, dropData.SourceTeam);
                 dataStore.AddPlayerToTeam(targetTeam, droppedPlayer);
+                dataStore.GetTeam(targetTeam).Sort((x, y) => -x.CombinedScore.CompareTo(y.CombinedScore)); // descending order
             }
 
             // Refresh the view to reflect changes
