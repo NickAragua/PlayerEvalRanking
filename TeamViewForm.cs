@@ -1,9 +1,12 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace WYSAPlayerRanker
 {
     public partial class TeamViewForm : Form
     {
+        private Dictionary<string, Label> teamLabels = new Dictionary<string, Label>();
+
         private class DragDropData
         {
             public CoalescedPlayerData PlayerData { get; set; }
@@ -51,6 +54,7 @@ namespace WYSAPlayerRanker
                 Controls.Add(lblTeam); ;
 
                 Label lblPlayerCount = new Label();
+                lblPlayerCount.Name = team.Key;
                 lblPlayerCount.Left = leftOffset + lblTeam.Width + 5;
                 lblPlayerCount.Top = topOffset;
                 lblPlayerCount.Text = $"Players: {team.Value.Count}";
@@ -157,8 +161,11 @@ namespace WYSAPlayerRanker
             {
                 // Remove from source team and add to target team
                 dataStore.RemovePlayerFromTeam(droppedPlayer, dropData.SourceTeam);
-                dataStore.AddPlayerToTeam(targetTeam, droppedPlayer);
+                dataStore.MovePlayerToTeam(droppedPlayer, targetTeam);
                 dataStore.GetTeam(targetTeam).Sort((x, y) => -x.CombinedScore.CompareTo(y.CombinedScore)); // descending order
+
+                Controls[dropData.SourceTeam].Text = $"Players: {dataStore.GetTeam(dropData.SourceTeam).Count}";
+                Controls[targetTeam].Text = $"Players: {dataStore.GetTeam(targetTeam).Count}";
             }
 
             // Refresh the view to reflect changes

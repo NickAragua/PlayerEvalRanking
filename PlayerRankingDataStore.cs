@@ -234,7 +234,7 @@ namespace WYSAPlayerRanker
             return RegisteredPlayers.ContainsKey(playerData.Key);
         }
 
-        public void AddPlayerToTeam(string teamName, CoalescedPlayerData playerData)
+        private void AddPlayerToTeam(string teamName, CoalescedPlayerData playerData)
         {
             if (!Teams.ContainsKey(teamName))
             {
