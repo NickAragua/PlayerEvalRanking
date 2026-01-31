@@ -55,8 +55,7 @@ namespace WYSAPlayerRanker
             // no data at all: just return a 1 and set a "red flag"
             if (playerData.CurrentSeasonScore == 0 && playerData.PreviousSeasonScore == 0 && playerData.EvalScore == 0)
             {
-                playerData.HasRedFlag = true;
-                playerData.CombinedScore = 1;
+                playerData.CombinedScore = -1;
             }
             // only eval scores: just return eval scores
             else if (playerData.CurrentSeasonScore == 0 && playerData.PreviousSeasonScore == 0 && playerData.EvalScore > 0)
@@ -103,6 +102,8 @@ namespace WYSAPlayerRanker
                         (playerData.PreviousSeasonScore * appSettings.PreviousSeasonWeight) * divisionMultiplier +
                         (playerData.EvalScore * appSettings.EvalWeight));
             }
+
+            playerData.HasRedFlag = playerData.CombinedScore < 0;
         }
     }
 }

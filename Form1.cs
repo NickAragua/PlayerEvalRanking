@@ -40,11 +40,13 @@ namespace WYSAPlayerRanker
         {
             CoalescedGridView.CellFormatting += CoalescedGridView_CellFormatting;
             TeamGridView.CellFormatting += TeamGridView_CellFormatting;
+            IndividualGridView.CellFormatting += IndividualGridView_CellFormatting;
         }
 
         private void InitializeCoalescedGridViewSorting()
         {
             CoalescedGridView.ColumnHeaderMouseClick += CoalescedGridView_ColumnHeaderMouseClick;
+            CoalescedGridView.CellValueChanged += CoalescedGridView_CellValueChanged;
         }
 
         private void EnableIndividualGridViewDragAndDrop()
@@ -83,6 +85,17 @@ namespace WYSAPlayerRanker
             RegistrantsGridView.DragDrop += RegistrantsGridView_DragDrop;
         }
 
+        private void IndividualGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (IndividualGridView.Columns[e.ColumnIndex].Name == "PlacementRecommendation")
+            {
+                if (e.Value != null && e.Value is PlacementRecommendation recommendation)
+                {
+                    e.Value = recommendation.ToString();
+                    e.FormattingApplied = true;
+                }
+            }
+        }
         private void TeamGridView_MouseDown(object sender, MouseEventArgs e)
         {
             if (TeamGridView.HitTest(e.X, e.Y).RowIndex >= 0)
@@ -127,6 +140,22 @@ namespace WYSAPlayerRanker
             else
             {
                 e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void CoalescedGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+            {
+                return;
+            }
+
+            CoalescedPlayerData playerData = CoalescedGridView.Rows[e.RowIndex].DataBoundItem as CoalescedPlayerData;
+
+            if (playerData != null)
+            {
+                playerData.CalculateCombinedScore(dataStore.ApplicationSettings);
+                CoalescedGridView.Refresh();
             }
         }
 
@@ -592,8 +621,11 @@ namespace WYSAPlayerRanker
                             cboSelectedTeam.SelectedIndex = 0;
                         }
 
-                        TeamGridView.DataSource = dataStore.GetTeam(cboSelectedTeam.SelectedItem.ToString());
-                        TeamGridView.Refresh();
+                        if (cboSelectedTeam.SelectedItem != null)
+                        {
+                            TeamGridView.DataSource = dataStore.GetTeam(cboSelectedTeam.SelectedItem.ToString());
+                            TeamGridView.Refresh();
+                        }                        
 
                         RegistrantsGridView.DataSource = dataStore.RegisteredPlayers.Values.ToList();
                         RegistrantsGridView.Refresh();

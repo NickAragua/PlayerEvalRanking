@@ -68,6 +68,7 @@ namespace WYSAPlayerRanker
                 team.Value.Sort((x, y) => -x.CombinedScore.CompareTo(y.CombinedScore)); // descending order
                 dataGridView.DataSource = team.Value;
                 dataGridView.Name = team.Key;
+                dataGridView.DefaultCellStyle.Format = "0.00";
                 dataGridView.Refresh();
 
                 EnableDragAndDrop(dataGridView, team.Key);

@@ -30,6 +30,7 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.CoalescedGridView = new System.Windows.Forms.DataGridView();
             this.IndividualGridView = new System.Windows.Forms.DataGridView();
             this.btnMergeEval = new System.Windows.Forms.Button();
@@ -126,6 +127,16 @@
             // TeamGridView
             // 
             this.TeamGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.Format = "N2";
+            dataGridViewCellStyle3.NullValue = "N/A";
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.TeamGridView.DefaultCellStyle = dataGridViewCellStyle3;
             this.TeamGridView.Location = new System.Drawing.Point(2, 427);
             this.TeamGridView.Name = "TeamGridView";
             this.TeamGridView.Size = new System.Drawing.Size(638, 431);

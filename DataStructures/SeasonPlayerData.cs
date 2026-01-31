@@ -39,6 +39,14 @@ namespace WYSAPlayerRanker
         public string SourceDataFile { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public double AverageScore
+        {
+            get
+            {
+                return (TechnicalScore + TacticalScore + MentalScore + PhysicalScore + AttendanceScore) / 5.0;
+            }
+        }
+
         public string TeamName { get; set; }
         [Browsable(false)]
         public string EvaluatingCoach { get; set; }
@@ -51,14 +59,6 @@ namespace WYSAPlayerRanker
         public int MentalScore { get; set; }
         public int PhysicalScore { get; set; }
         public int AttendanceScore { get; set; }
-
-        public double AverageScore
-        {
-            get
-            {
-                return (TechnicalScore + TacticalScore + MentalScore + PhysicalScore + AttendanceScore) / 5.0;
-            }
-        }
 
         public int GoalkeeperScore { get; set; }
         public string Comments { get; set; }
