@@ -11,6 +11,11 @@ top left box, the "Coalesced Player List". This can be done as many times as you
 - If you want to conveniently move players between teams, click 'Team View' and drag and drop players between teams there.
 - Once satisfied with your teams, click 'export'. This will export the teams into a spreadsheet similar to what we send in when building teams, but less pretty looking. Sorry.
 
+Some pictures:
+![MainScreenInstructions](https://github.com/user-attachments/assets/1020bff7-82a1-44d6-a863-3528c861dbb6)
+
+![TeamViewScreenInstructions](https://github.com/user-attachments/assets/b2360c35-19bd-4914-a338-1447b9e459cf)
+
 Some notes:
 
 Coalesced player list (top left):
@@ -33,5 +38,3 @@ Player divisions are displayed as 0-4 rather than 1-5.
 Some times, dragging things around in the bottom left box will cause a crash-to-desktop. Don't worry, your work is autosaved after every meaningful action.
 
 You probably won't be able to import "crazily formatted" coach evals from previous seasons. I tried to make it as error-tolerant as possible, but there are a lot of different formats out there and people used to change around column orders, delete rows, etc. 
-![TeamViewScreenInstructions](https://github.com/user-attachments/assets/b2360c35-19bd-4914-a338-1447b9e459cf)
-![MainScreenInstructions](https://github.com/user-attachments/assets/1020bff7-82a1-44d6-a863-3528c861dbb6)
