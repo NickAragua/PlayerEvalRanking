@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace WYSAPlayerRanker
@@ -270,6 +271,7 @@ namespace WYSAPlayerRanker
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
                 List<SeasonPlayerData> accumulator = new List<SeasonPlayerData>();
+                StringBuilder errorLogBuilder = new StringBuilder();
 
                 foreach (var file in files)
                 {
@@ -286,9 +288,22 @@ namespace WYSAPlayerRanker
 
                     if (file != null)
                     {
-                        var loadedData = ExcelPlayerDataLoader.LoadPlayersFromExcel(file);
+                        string errorLog;
+                        var loadedData = ExcelPlayerDataLoader.LoadPlayersFromExcel(file, out errorLog);
+                        if (!String.IsNullOrEmpty(errorLog))
+                        {
+                            errorLogBuilder.AppendLine(errorLog);
+                        }
+
                         accumulator.AddRange(loadedData);
                     }
+                }
+
+                if(errorLogBuilder.Length > 0)
+                {
+                    ErrorLogDisplay errorLog = new ErrorLogDisplay(errorLogBuilder.ToString());
+                    errorLog.ShowDialog();
+                    return;
                 }
 
                 IndividualGridView.DataSource = accumulator;
@@ -323,6 +338,8 @@ namespace WYSAPlayerRanker
                     dataStore.ProcessRegisteredPlayers(loadedData);
                     RegistrantsGridView.DataSource = loadedData;
                     RegistrantsGridView.Refresh();
+
+                    CoalescedGridView.DataSource = dataStore.CoalescedPlayerDataByName.Values.ToList();
                     CoalescedGridView.Refresh();
                 }
             }

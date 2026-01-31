@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using OfficeOpenXml;
 using WYSAPlayerRanker.DataStructures;
+using System.Text;
 
 namespace WYSAPlayerRanker
 {
@@ -68,6 +69,7 @@ namespace WYSAPlayerRanker
                         player.FirstName = worksheet.Cells[row, 5].GetValue<string>();
                         player.LastName = worksheet.Cells[row, 4].GetValue<string>();
                         player.GradeLevel = Int32.Parse(worksheet.Cells[row, 6].GetValue<string>().Substring(0, 1));
+                        player.PreviousTeam = worksheet.Cells[row, 10].GetValue<string>().Replace("Westford ", "");
 
                         if (string.IsNullOrWhiteSpace(player.FirstName) && string.IsNullOrWhiteSpace(player.LastName))
                         {
@@ -91,23 +93,37 @@ namespace WYSAPlayerRanker
         /// <summary>
         /// Given a coach eval xlsx file path, loads a list of SeasonPlayerData
         /// </summary>
-        public static List<SeasonPlayerData> LoadPlayersFromExcel(string filePath)
+        public static List<SeasonPlayerData> LoadPlayersFromExcel(string filePath, out string errorLog)
         {
             var players = new List<SeasonPlayerData>();
+            StringBuilder sb = new StringBuilder();
 
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
                 ExcelWorksheet worksheet = null;
+                int startingRow;
 
                 foreach (var currentWorksheet in package.Workbook.Worksheets)
                 {
-                    if (currentWorksheet.Cells[1, 1]?.GetValue<string>() != "Player")
+                    if (currentWorksheet.Cells[1, 1]?.GetValue<string>() == "Player")
                     {
-                        continue;
+                        // Fall 2025 and beyond sheets start with "Player" in A1
+                        worksheet = currentWorksheet;
+                        startingRow = 3;
+                        break;
                     }
+                    else if (currentWorksheet.Cells[1, 1]?.GetValue<string>() == "Last Name")
+                    {
+                        // spring 2025 sheets start with "Last Name" in A1
+                        worksheet = currentWorksheet;
+                        startingRow = 2;
+                        break;
+                    }
+                }
 
-                    worksheet = currentWorksheet;
-                    break;
+                if (worksheet == null)
+                {
+                    sb.Append("No valid worksheet found in the provided Excel file.");
                 }
 
                 int rowCount = worksheet?.Dimension?.Rows ?? 0;
@@ -145,11 +161,12 @@ namespace WYSAPlayerRanker
                     catch (Exception ex)
                     {
                         // Log or handle parsing errors for individual rows
-                        System.Diagnostics.Debug.WriteLine($"Error parsing row {row}: {ex.Message}");
+                        sb.Append($"Error parsing row {row}: {ex.Message}");
                     }
                 }
             }
 
+            errorLog = sb.ToString();
             return players;
         }
 

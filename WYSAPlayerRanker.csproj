@@ -99,6 +99,12 @@
     <Compile Include="DataStructures\CoalescedPlayerData.cs" />
     <Compile Include="DataLoader.cs" />
     <Compile Include="DataStructures\PlayerRegistrationData.cs" />
+    <Compile Include="ErrorLogDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErrorLogDisplay.Designer.cs">
+      <DependentUpon>ErrorLogDisplay.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,6 +127,9 @@
     <Compile Include="TeamViewForm.Designer.cs">
       <DependentUpon>TeamViewForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ErrorLogDisplay.resx">
+      <DependentUpon>ErrorLogDisplay.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

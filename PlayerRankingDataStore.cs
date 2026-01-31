@@ -157,10 +157,7 @@ namespace WYSAPlayerRanker
                 coalescedPlayerData.GradeLevel = RegisteredPlayers[player.Key].GradeLevel;
             }
 
-            if (String.IsNullOrEmpty(coalescedPlayerData.PreviousTeam)) 
-            {
-                coalescedPlayerData.PreviousTeam = player.TeamName;
-            }
+            coalescedPlayerData.PreviousTeam = player.TeamName;
 
             if (coalescedPlayerData.PreviousTeamDivision == 0)
             {
@@ -222,7 +219,16 @@ namespace WYSAPlayerRanker
                     RegisteredPlayers.Add(registrant.Key, registrant);
                 }
 
-                if (CoalescedPlayerDataByName.ContainsKey(registrant.Key))
+                if (!CoalescedPlayerDataByName.ContainsKey(registrant.Key))
+                {
+                    CoalescedPlayerDataByName.Add(registrant.Key, new CoalescedPlayerData()
+                    {
+                        FullName = registrant.FullName,
+                        GradeLevel = registrant.GradeLevel,
+                        PreviousTeam = registrant.PreviousTeam
+                    });
+                } 
+                else 
                 {
                     CoalescedPlayerDataByName[registrant.Key].GradeLevel = registrant.GradeLevel;
                 }

@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.CoalescedGridView = new System.Windows.Forms.DataGridView();
             this.IndividualGridView = new System.Windows.Forms.DataGridView();
             this.btnMergeEval = new System.Windows.Forms.Button();
@@ -52,11 +54,20 @@
             // CoalescedGridView
             // 
             this.CoalescedGridView.AllowUserToAddRows = false;
-            this.CoalescedGridView.AllowUserToDeleteRows = false;
+            this.CoalescedGridView.AllowUserToOrderColumns = true;
             this.CoalescedGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.Format = "N2";
+            dataGridViewCellStyle1.NullValue = "N/A";
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.CoalescedGridView.DefaultCellStyle = dataGridViewCellStyle1;
             this.CoalescedGridView.Location = new System.Drawing.Point(2, 0);
             this.CoalescedGridView.Name = "CoalescedGridView";
-            this.CoalescedGridView.ReadOnly = true;
             this.CoalescedGridView.Size = new System.Drawing.Size(638, 390);
             this.CoalescedGridView.TabIndex = 1;
             // 
@@ -65,6 +76,16 @@
             this.IndividualGridView.AllowUserToAddRows = false;
             this.IndividualGridView.AllowUserToDeleteRows = false;
             this.IndividualGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.Format = "N2";
+            dataGridViewCellStyle2.NullValue = "N/A";
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.IndividualGridView.DefaultCellStyle = dataGridViewCellStyle2;
             this.IndividualGridView.Location = new System.Drawing.Point(647, 0);
             this.IndividualGridView.Name = "IndividualGridView";
             this.IndividualGridView.ReadOnly = true;
