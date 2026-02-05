@@ -103,8 +103,6 @@ namespace WYSAPlayerRanker
                     CoalescedPlayerDataByName[player.Key].PreviousSeasonScore = player.PreviousSeasonScore;
                     CoalescedPlayerDataByName[player.Key].EvalScore = player.EvalScore;
                 }
-
-                CoalescedPlayerDataByName[player.Key].CalculateCombinedScore(ApplicationSettings);
             }
         }
 

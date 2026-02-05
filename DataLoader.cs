@@ -170,53 +170,120 @@ namespace WYSAPlayerRanker
             return players;
         }
 
-        /// <summary>
-        /// Loads a list of CoalescedPlayerData from last season's master player list
-        /// with coach eval populated as "previous season score" and 
-        /// </summary>
-        public static List<CoalescedPlayerData> LoadMasterList(string filePath)
+        public static List<CoalescedPlayerData> LoadMasterList(string filePath, out string season)
         {
             var players = new List<CoalescedPlayerData>();
-            
+            season = "S26"; // default for now
+
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
-                ExcelWorksheet worksheet = null;
                 foreach (var currentWorksheet in package.Workbook.Worksheets)
                 {
                     if (currentWorksheet.Cells[1, 1]?.GetValue<string>() != "Program")
                     {
                         continue;
                     }
-                    worksheet = currentWorksheet;
-                    break;
-                }
-                int rowCount = worksheet?.Dimension?.Rows ?? 0;
-                // Assuming first row contains headers
-                for (int row = 2; row <= rowCount; row++)
-                {
-                    try
-                    {
-                        var player = new CoalescedPlayerData();
-                        player.FullName = worksheet.Cells[row, 3].GetValue<string>() + " " +
-                            worksheet.Cells[row, 2].GetValue<string>();
-                        player.PreviousSeasonScore = worksheet.Cells[row, 12].GetValue<double>();
-                        player.EvalScore = worksheet.Cells[row, 13].GetValue<double>();
-                        player.PreviousTeamDivision = worksheet.Cells[row, 8].GetValue<int>();
 
-                        if (string.IsNullOrWhiteSpace(player.FullName))
-                        {
-                            // Skip empty rows
-                            continue;
-                        }
-                        players.Add(player);
-                    }
-                    catch (Exception ex)
+                    switch (currentWorksheet.Cells[1, 4]?.GetValue<string>())
                     {
-                        // Log or handle parsing errors for individual rows
-                        System.Diagnostics.Debug.WriteLine($"Error parsing row {row}: {ex.Message}");
+                        case "Grade":
+                            season = "F25";
+                            return LoadMasterListF25(currentWorksheet);
+                        case "Birth Date":
+                        default:
+                            season = "S26";
+                            return LoadMasterListF26(currentWorksheet);
                     }
                 }
             }
+
+            return players;
+        }
+
+        /// <summary>
+        /// Loads a list of CoalescedPlayerData from last season's master player list
+        /// with coach eval populated as "previous season score" and 
+        /// </summary>
+        public static List<CoalescedPlayerData> LoadMasterListF26(ExcelWorksheet worksheet)
+        {
+            var players = new List<CoalescedPlayerData>();
+
+            int rowCount = worksheet?.Dimension?.Rows ?? 0;
+            // Assuming first row contains headers
+            for (int row = 2; row <= rowCount; row++)
+            {
+                try
+                {
+                    var player = new CoalescedPlayerData();
+                    player.FullName = worksheet.Cells[row, 3].GetValue<string>() + " " +
+                        worksheet.Cells[row, 2].GetValue<string>();
+
+                    player.EvalScore = worksheet.Cells[row, 9].GetValue<double>();
+                    player.PreviousTeam = worksheet.Cells[row, 7].GetValue<string>();
+
+                    if (!String.IsNullOrEmpty(player.PreviousTeam))
+                    {
+                        player.PreviousTeam = player.PreviousTeam.Replace("Westford ", "");
+                    }
+
+                    player.CurrentSeasonScore = worksheet.Cells[row, 10].GetValue<double>();
+                    player.PreviousSeasonScore = worksheet.Cells[row, 12].GetValue<double>();
+                    player.CombinedScore = worksheet.Cells[row, 16].GetValue<double>();
+
+                    if (string.IsNullOrWhiteSpace(player.FullName))
+                    {
+                        // Skip empty rows
+                        continue;
+                    }
+
+                    players.Add(player);
+                }
+                catch (Exception ex)
+                {
+                    // Log or handle parsing errors for individual rows
+                    System.Diagnostics.Debug.WriteLine($"Error parsing row {row}: {ex.Message}");
+                }
+            }
+
+            return players;
+        }
+
+        /// <summary>
+        /// Loads a list of CoalescedPlayerData from last season's master player list
+        /// with coach eval populated as "previous season score" and 
+        /// </summary>
+        public static List<CoalescedPlayerData> LoadMasterListF25(ExcelWorksheet worksheet)
+        {
+            var players = new List<CoalescedPlayerData>();
+                        
+            int rowCount = worksheet?.Dimension?.Rows ?? 0;
+            // Assuming first row contains headers
+            for (int row = 2; row <= rowCount; row++)
+            {
+                try
+                {
+                    var player = new CoalescedPlayerData();
+                    player.FullName = worksheet.Cells[row, 3].GetValue<string>() + " " +
+                        worksheet.Cells[row, 2].GetValue<string>();
+                    player.PreviousSeasonScore = worksheet.Cells[row, 12].GetValue<double>();
+                    player.EvalScore = worksheet.Cells[row, 13].GetValue<double>();
+                    player.PreviousTeamDivision = worksheet.Cells[row, 8].GetValue<int>();
+
+                    if (string.IsNullOrWhiteSpace(player.FullName))
+                    {
+                        // Skip empty rows
+                        continue;
+                    }
+
+                    players.Add(player);
+                }
+                catch (Exception ex)
+                {
+                    // Log or handle parsing errors for individual rows
+                    System.Diagnostics.Debug.WriteLine($"Error parsing row {row}: {ex.Message}");
+                }
+            }
+
             return players;
         }
 

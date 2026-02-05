@@ -168,8 +168,16 @@ namespace WYSAPlayerRanker
 
                 if (excelFile != null)
                 {
-                    var loadedData = ExcelPlayerDataLoader.LoadMasterList(excelFile);
+                    string season;
+                    var loadedData = ExcelPlayerDataLoader.LoadMasterList(excelFile, out season);
                     dataStore.ImportFromLastSeasonMasterList(loadedData);
+
+                    // hack
+                    if (season == "F25") 
+                    {
+                        dataStore.RecalculatePlayerScores();
+                    }
+
                     CoalescedGridView.DataSource = dataStore.CoalescedPlayerDataByName.Values.ToList();
                     CoalescedGridView.Refresh();
                 }
