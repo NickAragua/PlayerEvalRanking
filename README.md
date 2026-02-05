@@ -11,6 +11,11 @@ top left box, the "Coalesced Player List". This can be done as many times as you
 - If you want to conveniently move players between teams, click 'Team View' and drag and drop players between teams there.
 - Once satisfied with your teams, click 'export'. This will export the teams into a spreadsheet similar to what we send in when building teams, but less pretty looking. Sorry.
 
+Alternate mechanism:
+- Drag and drop the "[age group] - Final Overall Score - S26.xlsx" file that you got with the player rankings into the top left box
+- Drag and drop your exported "Grade X/Y" shared report into the bottom right box
+- Build teams as above
+
 Some pictures:
 ![MainScreenInstructions](https://github.com/user-attachments/assets/1020bff7-82a1-44d6-a863-3528c861dbb6)
 
