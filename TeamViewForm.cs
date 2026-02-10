@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace WYSAPlayerRanker
@@ -47,6 +48,8 @@ namespace WYSAPlayerRanker
 
             foreach (var team in dataStore.Teams)
             {
+                List<CoalescedPlayerData> teamPlayers = team.Value.Values.ToList();
+
                 Label lblTeam = new Label();
                 lblTeam.Left = leftOffset;
                 lblTeam.Top = topOffset;
@@ -57,7 +60,7 @@ namespace WYSAPlayerRanker
                 lblPlayerCount.Name = team.Key;
                 lblPlayerCount.Left = leftOffset + lblTeam.Width + 5;
                 lblPlayerCount.Top = topOffset;
-                lblPlayerCount.Text = $"Players: {team.Value.Count}";
+                lblPlayerCount.Text = $"Players: {teamPlayers.Count}";
                 Controls.Add(lblPlayerCount);
 
                 DataGridView dataGridView = new DataGridView();
@@ -65,8 +68,8 @@ namespace WYSAPlayerRanker
                 dataGridView.Top = topOffset + lblTeam.Height;
                 dataGridView.Width = (int) (Screen.PrimaryScreen.Bounds.Width / 3.2);
                 dataGridView.Height = gridHeight = dataGridView.ColumnHeadersHeight * 17;
-                team.Value.Sort((x, y) => -x.CombinedScore.CompareTo(y.CombinedScore)); // descending order
-                dataGridView.DataSource = team.Value;
+                teamPlayers.Sort((x, y) => -x.CombinedScore.CompareTo(y.CombinedScore)); // descending order
+                dataGridView.DataSource = teamPlayers;
                 dataGridView.Name = team.Key;
                 dataGridView.DefaultCellStyle.Format = "0.00";
                 dataGridView.Refresh();

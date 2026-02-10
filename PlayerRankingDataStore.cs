@@ -25,7 +25,7 @@ namespace WYSAPlayerRanker
         
         public Dictionary<string, CoalescedPlayerData> PreviousCoalescedData { get; set; } = new Dictionary<string, CoalescedPlayerData>();
 
-        public Dictionary<string, List<CoalescedPlayerData>> Teams { get; set; } = new Dictionary<string, List<CoalescedPlayerData>>();
+        public Dictionary<string, Dictionary<String, CoalescedPlayerData>> Teams { get; set; } = new Dictionary<string, Dictionary<String, CoalescedPlayerData>>();
 
         public Dictionary<string, PlayerRegistrationData> RegisteredPlayers { get; set; } = new Dictionary<string, PlayerRegistrationData>();
 
@@ -217,7 +217,10 @@ namespace WYSAPlayerRanker
                     RegisteredPlayers.Add(registrant.Key, registrant);
                 }
 
-                if (!CoalescedPlayerDataByName.ContainsKey(registrant.Key))
+                string playerTeam = GetPlayerTeam(registrant);
+
+                // player is neither "unassigned" nor on a team - add them to unassigned list
+                if (!CoalescedPlayerDataByName.ContainsKey(registrant.Key) && playerTeam == null)
                 {
                     CoalescedPlayerDataByName.Add(registrant.Key, new CoalescedPlayerData()
                     {
@@ -226,11 +229,32 @@ namespace WYSAPlayerRanker
                         PreviousTeam = registrant.PreviousTeam
                     });
                 } 
-                else 
+                // player is unassigned - update their info
+                else if (CoalescedPlayerDataByName.ContainsKey(registrant.Key))
                 {
                     CoalescedPlayerDataByName[registrant.Key].GradeLevel = registrant.GradeLevel;
                 }
+                else if (playerTeam != null)
+                {
+                    Teams[playerTeam][registrant.Key].GradeLevel = registrant.GradeLevel;
+                }
             }
+        }
+
+        /// <summary>
+        /// Returns the name/key of the team the player is assigned to. Null if no team.
+        /// </summary>
+        public string GetPlayerTeam(PlayerRegistrationData playerRegistrationData)
+        {
+            foreach (var team in Teams.Keys)
+            {
+                if (Teams[team].ContainsKey(playerRegistrationData.Key))
+                {
+                    return team;
+                }
+            }
+
+            return null;
         }
 
         public bool PlayerIsRegistered(CoalescedPlayerData playerData)
@@ -242,12 +266,12 @@ namespace WYSAPlayerRanker
         {
             if (!Teams.ContainsKey(teamName))
             {
-                Teams[teamName] = new List<CoalescedPlayerData>();
+                Teams[teamName] = new Dictionary<string, CoalescedPlayerData>();
             }
 
-            if (!Teams[teamName].Contains(playerData))
+            if (!Teams[teamName].ContainsKey(playerData.Key))
             {
-                Teams[teamName].Add(playerData);
+                Teams[teamName].Add(playerData.Key, playerData);
             }
         }
 
@@ -255,14 +279,14 @@ namespace WYSAPlayerRanker
         {
             if (Teams.ContainsKey(teamName))
             {
-                Teams[teamName].Remove(playerData);
+                Teams[teamName].Remove(playerData.Key);
             }
         }
 
         public void AddNewTeam()
         {
             string teamName = $"Team {Teams.Count + 1}";
-            Teams.Add(teamName, new List<CoalescedPlayerData>());
+            Teams.Add(teamName, new Dictionary<string, CoalescedPlayerData>());
         }
 
         public void RemoveTeam(string teamName)
@@ -277,7 +301,7 @@ namespace WYSAPlayerRanker
         {
             if (Teams.ContainsKey(teamName))
             {
-                return Teams[teamName];
+                return Teams[teamName].Values.ToList();
             }
             return new List<CoalescedPlayerData>();
         }

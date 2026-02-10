@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -46,10 +47,13 @@
             this.btnExport = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
             this.btnTeamView = new System.Windows.Forms.Button();
+            this.contextMenuTeam = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.generateTeamMailingListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.CoalescedGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.IndividualGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TeamGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegistrantsGridView)).BeginInit();
+            this.contextMenuTeam.SuspendLayout();
             this.SuspendLayout();
             // 
             // CoalescedGridView
@@ -232,6 +236,19 @@
             this.btnTeamView.UseVisualStyleBackColor = true;
             this.btnTeamView.Click += new System.EventHandler(this.btnTeamView_Click);
             // 
+            // contextMenuTeam
+            // 
+            this.contextMenuTeam.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.generateTeamMailingListToolStripMenuItem});
+            this.contextMenuTeam.Name = "contextMenuTeam";
+            this.contextMenuTeam.Size = new System.Drawing.Size(217, 48);
+            // 
+            // generateTeamMailingListToolStripMenuItem
+            // 
+            this.generateTeamMailingListToolStripMenuItem.Name = "generateTeamMailingListToolStripMenuItem";
+            this.generateTeamMailingListToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.generateTeamMailingListToolStripMenuItem.Text = "Generate Team Mailing List";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -258,6 +275,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.IndividualGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TeamGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegistrantsGridView)).EndInit();
+            this.contextMenuTeam.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -278,6 +296,8 @@
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Button btnTeamView;
+        private System.Windows.Forms.ContextMenuStrip contextMenuTeam;
+        private System.Windows.Forms.ToolStripMenuItem generateTeamMailingListToolStripMenuItem;
     }
 }
 

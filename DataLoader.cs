@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using OfficeOpenXml;
 using WYSAPlayerRanker.DataStructures;
 using System.Text;
+using System.Linq;
 
 namespace WYSAPlayerRanker
 {
@@ -70,6 +71,7 @@ namespace WYSAPlayerRanker
                         player.LastName = worksheet.Cells[row, 4].GetValue<string>();
                         player.GradeLevel = Int32.Parse(worksheet.Cells[row, 6].GetValue<string>().Substring(0, 1));
                         player.PreviousTeam = worksheet.Cells[row, 10].GetValue<string>().Replace("Westford ", "");
+                        player.Email = worksheet.Cells[row, 23].GetValue<string>();
 
                         if (string.IsNullOrWhiteSpace(player.FirstName) && string.IsNullOrWhiteSpace(player.LastName))
                         {
@@ -101,7 +103,6 @@ namespace WYSAPlayerRanker
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
                 ExcelWorksheet worksheet = null;
-                int startingRow;
 
                 foreach (var currentWorksheet in package.Workbook.Worksheets)
                 {
@@ -109,14 +110,6 @@ namespace WYSAPlayerRanker
                     {
                         // Fall 2025 and beyond sheets start with "Player" in A1
                         worksheet = currentWorksheet;
-                        startingRow = 3;
-                        break;
-                    }
-                    else if (currentWorksheet.Cells[1, 1]?.GetValue<string>() == "Last Name")
-                    {
-                        // spring 2025 sheets start with "Last Name" in A1
-                        worksheet = currentWorksheet;
-                        startingRow = 2;
                         break;
                     }
                 }
@@ -309,7 +302,7 @@ namespace WYSAPlayerRanker
                 foreach (string teamKey in dataStore.Teams.Keys)
                 {
                     AddHeaders(worksheet, teamKey, currentX, currentY);
-                    AddPlayers(worksheet, currentX + headerHeight, currentY, dataStore.Teams[teamKey]);
+                    AddPlayers(worksheet, currentX + headerHeight, currentY, dataStore.Teams[teamKey].Values.ToList());
                     
                     currentY += tableWidth;
                     teamCounter++;
