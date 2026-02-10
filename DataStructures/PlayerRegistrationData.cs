@@ -8,6 +8,8 @@ namespace WYSAPlayerRanker.DataStructures
         public string LastName { get; set; }
         public int GradeLevel { get; set; }
 
+        public string Email { get; set; }
+
         public string PreviousTeam { get; set; }
 
         [Browsable(false)]
