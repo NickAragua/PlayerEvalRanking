@@ -75,6 +75,8 @@ namespace WYSAPlayerRanker
             TeamGridView.AllowDrop = true;
             TeamGridView.DragEnter += TeamGridView_DragEnter;
             TeamGridView.DragDrop += TeamGridView_DragDrop;
+            TeamGridView.ContextMenuStrip = new ContextMenuStrip();
+            TeamGridView.ContextMenuStrip.Items.Add(new ToolStripMenuItem("Generate Mailing List", null, GenerateMailingList_Click));
         }
 
         private void EnableRegistrantsGridViewDragDrop()
@@ -83,6 +85,14 @@ namespace WYSAPlayerRanker
             RegistrantsGridView.AllowDrop = true;
             RegistrantsGridView.DragEnter += RegistrantsGridView_DragEnter;
             RegistrantsGridView.DragDrop += RegistrantsGridView_DragDrop;
+        }
+
+        private void GenerateMailingList_Click(object sender, EventArgs e)
+        {
+            if (cboSelectedTeam.SelectedItem != null) {
+                ErrorLogDisplay errorLog = new ErrorLogDisplay(dataStore.GetEmailList(cboSelectedTeam.SelectedItem.ToString()));
+                errorLog.ShowDialog();
+            }
         }
 
         private void IndividualGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)

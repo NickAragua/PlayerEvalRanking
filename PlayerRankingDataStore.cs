@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using WYSAPlayerRanker.DataStructures;
 
@@ -255,6 +256,19 @@ namespace WYSAPlayerRanker
             }
 
             return null;
+        }
+
+        public string GetEmailList(string teamName)
+        {
+            StringBuilder emailBuilder = new StringBuilder();
+
+            foreach (var player in Teams[teamName].Values)
+            {
+                emailBuilder.Append(RegisteredPlayers[player.Key].Email);
+                emailBuilder.Append(";");
+            }
+
+            return emailBuilder.ToString();
         }
 
         public bool PlayerIsRegistered(CoalescedPlayerData playerData)

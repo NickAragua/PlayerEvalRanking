@@ -59,7 +59,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.txtError);
             this.Name = "ErrorLogDisplay";
-            this.Text = "ErrorLogDisplay";
+            this.Text = "Information";
             this.ResumeLayout(false);
             this.PerformLayout();
 
