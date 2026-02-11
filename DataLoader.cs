@@ -5,6 +5,8 @@ using OfficeOpenXml;
 using WYSAPlayerRanker.DataStructures;
 using System.Text;
 using System.Linq;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace WYSAPlayerRanker
 {
@@ -314,8 +316,19 @@ namespace WYSAPlayerRanker
                     }
                 }
 
+                ExcelWorksheet exceptionSheet = package.Workbook.Worksheets.Add("Exceptions");
+                SetExceptionHeaders(exceptionSheet);
+
                 package.Save();
             }
+        }
+
+        private static void SetExceptionHeaders(ExcelWorksheet worksheet)
+        {
+            worksheet.Cells[1, 1].Value = "Name";
+            worksheet.Cells[1, 2].Value = "Team data places them on";
+            worksheet.Cells[1, 3].Value = "Team you are placing them on";
+            worksheet.Cells[1, 4].Value = "Reason";
         }
 
         private static void AddPlayers(ExcelWorksheet worksheet, int x, int y, List<CoalescedPlayerData> players)
@@ -325,10 +338,21 @@ namespace WYSAPlayerRanker
             foreach (CoalescedPlayerData player in players)
             {
                 worksheet.Cells[currentRow, y].Value = player.CombinedScore.ToString("F2");
+                worksheet.Cells[currentRow, y].Style.Fill.PatternType = ExcelFillStyle.DarkGray;
+                worksheet.Cells[currentRow, y].Style.Fill.BackgroundColor.SetColor(Color.Gray);
+                worksheet.Cells[currentRow, y].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+
                 worksheet.Cells[currentRow, y + 2].Value = player.FullName.Split(' ')[0];
+                worksheet.Cells[currentRow, y + 2].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                 worksheet.Cells[currentRow, y + 3].Value = player.FullName.Split(' ')[1];
+                worksheet.Cells[currentRow, y + 3].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                 worksheet.Cells[currentRow, y + 4].Value = player.GradeLevel.ToString();
+                worksheet.Cells[currentRow, y + 4].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+
                 worksheet.Cells[currentRow, y + 5].Value = player.EvalScore.ToString("F2");
+                worksheet.Cells[currentRow, y + 5].Style.Fill.PatternType = ExcelFillStyle.DarkGray;
+                worksheet.Cells[currentRow, y + 5].Style.Fill.BackgroundColor.SetColor(Color.Gray);
+                worksheet.Cells[currentRow, y + 5].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                 currentRow++;
             }
         }
@@ -337,9 +361,18 @@ namespace WYSAPlayerRanker
         {
             // note: x is the row, y is the column
             worksheet.Cells[x, y].Value = "[Division Here]";
+            worksheet.Cells[x, y].Style.Font.Bold = true;
+            worksheet.Cells[x, y].Style.Fill.PatternType = ExcelFillStyle.DarkGray;
+            worksheet.Cells[x, y].Style.Fill.BackgroundColor.SetColor(Color.Yellow);
+
             worksheet.Cells[x, y + 2].Value = "Coaches";
+            worksheet.Cells[x, y + 2].Style.Font.Bold = true;
+
             worksheet.Cells[x + 1, y].Value = teamName;
+            worksheet.Cells[x + 1, y].Style.Font.Bold = true;
+
             worksheet.Cells[x + 1, y + 2].Value = "[Coach List Here]";
+
             worksheet.Cells[x + 2, y].Value = "Overall";
             worksheet.Cells[x + 2, y + 1].Value = "#";
             worksheet.Cells[x + 2, y + 2].Value = "Last Name";
