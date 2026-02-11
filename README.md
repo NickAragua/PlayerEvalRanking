@@ -31,6 +31,8 @@ Players highlighted in orange are not currently registered with WYSA (if you hav
 
 If you mess up and want to undo your last action, click 'Undo'; it will undo most meaningful actions.
 
+To generate a list of player emails that you can copy+paste, right click in the gray area in the team box (bottom left) and select "Generate Mailing List".
+
 To save your work in progress click 'Save' and pick a destination file. To restore it, click 'Load'. 
 
 The utility autosaves after every meaningful action. The backup is called "autosave_player_rankings.json" and lives where your executable lives. It can be loaded via the 'Load' mechanism.
