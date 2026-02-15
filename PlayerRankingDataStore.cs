@@ -315,7 +315,9 @@ namespace WYSAPlayerRanker
         {
             if (Teams.ContainsKey(teamName))
             {
-                return Teams[teamName].Values.ToList();
+                List<CoalescedPlayerData> teamplayers = Teams[teamName].Values.ToList();
+                teamplayers.Sort((x, y) => -x.CombinedScore.CompareTo(y.CombinedScore));
+                return teamplayers;
             }
             return new List<CoalescedPlayerData>();
         }

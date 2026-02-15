@@ -32,7 +32,7 @@ namespace WYSAPlayerRanker
                 if (control is DataGridView gridView)
                 {
                     gridView.DataSource = null;
-                    gridView.DataSource = dataStore.Teams[gridView.Name];
+                    gridView.DataSource = dataStore.GetTeam(gridView.Name);
                     gridView.Refresh();
                 }
             }
@@ -48,7 +48,7 @@ namespace WYSAPlayerRanker
 
             foreach (var team in dataStore.Teams)
             {
-                List<CoalescedPlayerData> teamPlayers = team.Value.Values.ToList();
+                List<CoalescedPlayerData> teamPlayers = dataStore.GetTeam(team.Key);
 
                 Label lblTeam = new Label();
                 lblTeam.Left = leftOffset;
