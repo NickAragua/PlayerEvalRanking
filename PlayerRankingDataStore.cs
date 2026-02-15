@@ -311,6 +311,9 @@ namespace WYSAPlayerRanker
             }
         }
 
+        /// <summary>
+        /// Retrieves a list of players from the team with the given name, sorted by combined score
+        /// </summary>
         public List<CoalescedPlayerData> GetTeam(string teamName)
         {
             if (Teams.ContainsKey(teamName))

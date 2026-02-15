@@ -68,7 +68,6 @@ namespace WYSAPlayerRanker
                 dataGridView.Top = topOffset + lblTeam.Height;
                 dataGridView.Width = (int) (Screen.PrimaryScreen.Bounds.Width / 3.2);
                 dataGridView.Height = gridHeight = dataGridView.ColumnHeadersHeight * 17;
-                teamPlayers.Sort((x, y) => -x.CombinedScore.CompareTo(y.CombinedScore)); // descending order
                 dataGridView.DataSource = teamPlayers;
                 dataGridView.Name = team.Key;
                 dataGridView.DefaultCellStyle.Format = "0.00";
