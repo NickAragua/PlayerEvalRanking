@@ -304,7 +304,7 @@ namespace WYSAPlayerRanker
                 foreach (string teamKey in dataStore.Teams.Keys)
                 {
                     AddHeaders(worksheet, teamKey, currentX, currentY);
-                    AddPlayers(worksheet, currentX + headerHeight, currentY, dataStore.Teams[teamKey].Values.ToList());
+                    AddPlayers(worksheet, currentX + headerHeight, currentY, dataStore.GetTeam(teamKey));
                     
                     currentY += tableWidth;
                     teamCounter++;

@@ -47,6 +47,8 @@
             this.lblDiv3Weight = new System.Windows.Forms.Label();
             this.lblDiv4Weight = new System.Windows.Forms.Label();
             this.lblDiv5Weight = new System.Windows.Forms.Label();
+            this.lblNoAssessPenalty = new System.Windows.Forms.Label();
+            this.txtNoAssessPenalty = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtCurrentSeasonWeight
@@ -93,16 +95,16 @@
             this.lblEvalWeight.AutoSize = true;
             this.lblEvalWeight.Location = new System.Drawing.Point(38, 81);
             this.lblEvalWeight.Name = "lblEvalWeight";
-            this.lblEvalWeight.Size = new System.Drawing.Size(68, 13);
+            this.lblEvalWeight.Size = new System.Drawing.Size(103, 13);
             this.lblEvalWeight.TabIndex = 5;
-            this.lblEvalWeight.Text = "Eval Weight:";
+            this.lblEvalWeight.Text = "Assessment Weight:";
             // 
             // chkAutosave
             // 
             this.chkAutosave.AutoSize = true;
             this.chkAutosave.Checked = true;
             this.chkAutosave.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAutosave.Location = new System.Drawing.Point(41, 112);
+            this.chkAutosave.Location = new System.Drawing.Point(41, 135);
             this.chkAutosave.Name = "chkAutosave";
             this.chkAutosave.Size = new System.Drawing.Size(77, 17);
             this.chkAutosave.TabIndex = 6;
@@ -111,7 +113,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(41, 136);
+            this.btnCancel.Location = new System.Drawing.Point(41, 159);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 7;
@@ -121,7 +123,7 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(171, 136);
+            this.btnOk.Location = new System.Drawing.Point(171, 159);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 8;
@@ -209,11 +211,29 @@
             this.lblDiv5Weight.TabIndex = 18;
             this.lblDiv5Weight.Text = "Div 5 Weight:";
             // 
+            // lblNoAssessPenalty
+            // 
+            this.lblNoAssessPenalty.AutoSize = true;
+            this.lblNoAssessPenalty.Location = new System.Drawing.Point(38, 107);
+            this.lblNoAssessPenalty.Name = "lblNoAssessPenalty";
+            this.lblNoAssessPenalty.Size = new System.Drawing.Size(121, 13);
+            this.lblNoAssessPenalty.TabIndex = 19;
+            this.lblNoAssessPenalty.Text = "No Assessment Penalty:";
+            // 
+            // txtNoAssessPenalty
+            // 
+            this.txtNoAssessPenalty.Location = new System.Drawing.Point(171, 104);
+            this.txtNoAssessPenalty.Name = "txtNoAssessPenalty";
+            this.txtNoAssessPenalty.Size = new System.Drawing.Size(100, 20);
+            this.txtNoAssessPenalty.TabIndex = 20;
+            // 
             // SettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(603, 175);
+            this.ClientSize = new System.Drawing.Size(603, 194);
+            this.Controls.Add(this.txtNoAssessPenalty);
+            this.Controls.Add(this.lblNoAssessPenalty);
             this.Controls.Add(this.lblDiv5Weight);
             this.Controls.Add(this.lblDiv4Weight);
             this.Controls.Add(this.lblDiv3Weight);
@@ -263,5 +283,7 @@
         private System.Windows.Forms.Label lblDiv3Weight;
         private System.Windows.Forms.Label lblDiv4Weight;
         private System.Windows.Forms.Label lblDiv5Weight;
+        private System.Windows.Forms.Label lblNoAssessPenalty;
+        private System.Windows.Forms.TextBox txtNoAssessPenalty;
     }
 }

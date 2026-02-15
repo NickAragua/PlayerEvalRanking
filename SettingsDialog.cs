@@ -18,12 +18,13 @@ namespace WYSAPlayerRanker
             DataStore = dataStore;
             txtCurrentSeasonWeight.Text = appSettings.CurrentSeasonWeight.ToString();
             txtPrevSeasonWeight.Text = appSettings.PreviousSeasonWeight.ToString();
-            txtEvalWeight.Text = appSettings.EvalWeight.ToString();
+            txtEvalWeight.Text = appSettings.AssessmentWeight.ToString();
             txtDiv1Weight.Text = appSettings.DivisionWeights[0].ToString();
             txtDiv2Weight.Text = appSettings.DivisionWeights[1].ToString();
             txtDiv3Weight.Text = appSettings.DivisionWeights[2].ToString();
             txtDiv4Weight.Text = appSettings.DivisionWeights[3].ToString();
             txtDiv5Weight.Text = appSettings.DivisionWeights[4].ToString();
+            txtNoAssessPenalty.Text = appSettings.NoAssessmentPenalty.ToString();
             chkAutosave.Checked = appSettings.AutoSave;
         }
 
@@ -36,19 +37,21 @@ namespace WYSAPlayerRanker
                 !ValidateWeight(txtDiv2Weight, lblDiv2Weight) ||
                 !ValidateWeight(txtDiv3Weight, lblDiv3Weight) ||
                 !ValidateWeight(txtDiv4Weight, lblDiv4Weight) ||
-                !ValidateWeight(txtDiv5Weight, lblDiv5Weight)) 
+                !ValidateWeight(txtDiv5Weight, lblDiv5Weight) ||
+                !ValidateWeight(txtNoAssessPenalty, lblNoAssessPenalty)) 
             { 
                 return; 
             }
 
             appSettings.CurrentSeasonWeight = Double.Parse(txtCurrentSeasonWeight.Text);
             appSettings.PreviousSeasonWeight = Double.Parse(txtPrevSeasonWeight.Text);
-            appSettings.EvalWeight = Double.Parse(txtEvalWeight.Text);
+            appSettings.AssessmentWeight = Double.Parse(txtEvalWeight.Text);
             appSettings.DivisionWeights[0] = Double.Parse(txtDiv1Weight.Text);
             appSettings.DivisionWeights[1] = Double.Parse(txtDiv2Weight.Text);
             appSettings.DivisionWeights[2] = Double.Parse(txtDiv3Weight.Text);
             appSettings.DivisionWeights[3] = Double.Parse(txtDiv4Weight.Text);
             appSettings.DivisionWeights[4] = Double.Parse(txtDiv5Weight.Text);
+            appSettings.NoAssessmentPenalty = Double.Parse(txtNoAssessPenalty.Text);
 
             appSettings.AutoSave = chkAutosave.Checked;
 

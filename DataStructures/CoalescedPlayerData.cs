@@ -52,7 +52,7 @@ namespace WYSAPlayerRanker
             }
 
             // scenarios:
-            // no data at all: just return a 1 and set a "red flag"
+            // no data at all: just return a -1
             if (playerData.CurrentSeasonScore == 0 && playerData.PreviousSeasonScore == 0 && playerData.EvalScore == 0)
             {
                 playerData.CombinedScore = -1;
@@ -73,7 +73,7 @@ namespace WYSAPlayerRanker
                 // treat previous season score as weighted by both season weights
                 double seasonWeight = appSettings.PreviousSeasonWeight + appSettings.CurrentSeasonWeight;
                 playerData.CombinedScore = ((playerData.PreviousSeasonScore * seasonWeight) * divisionMultiplier +
-                        (playerData.EvalScore * appSettings.EvalWeight));
+                        (playerData.EvalScore * appSettings.AssessmentWeight));
             }
             // only current season scores: just  current season score, with division weight
             else if (playerData.CurrentSeasonScore > 0 && playerData.PreviousSeasonScore == 0 && playerData.EvalScore == 0)
@@ -85,13 +85,13 @@ namespace WYSAPlayerRanker
             {
                 double seasonWeight = appSettings.PreviousSeasonWeight + appSettings.CurrentSeasonWeight;
                 playerData.CombinedScore = ((playerData.CurrentSeasonScore * seasonWeight) * divisionMultiplier +
-                        (playerData.EvalScore * appSettings.EvalWeight));
+                        (playerData.EvalScore * appSettings.AssessmentWeight));
             }
             // only current and previous season scores
             else if (playerData.CurrentSeasonScore > 0 && playerData.PreviousSeasonScore > 0 && playerData.EvalScore == 0)
             {
-                double currentSeasonWeight = appSettings.CurrentSeasonWeight + appSettings.EvalWeight / 2.0;
-                double previousSeasonWeight = appSettings.PreviousSeasonWeight + appSettings.EvalWeight / 2.0;
+                double currentSeasonWeight = appSettings.CurrentSeasonWeight + appSettings.AssessmentWeight / 2.0;
+                double previousSeasonWeight = appSettings.PreviousSeasonWeight + appSettings.AssessmentWeight / 2.0;
                 playerData.CombinedScore = ((playerData.CurrentSeasonScore * currentSeasonWeight) * divisionMultiplier +
                         (playerData.PreviousSeasonScore * previousSeasonWeight) * divisionMultiplier);
             }
@@ -100,7 +100,13 @@ namespace WYSAPlayerRanker
             {
                 playerData.CombinedScore = ((playerData.CurrentSeasonScore * appSettings.CurrentSeasonWeight) * divisionMultiplier +
                         (playerData.PreviousSeasonScore * appSettings.PreviousSeasonWeight) * divisionMultiplier +
-                        (playerData.EvalScore * appSettings.EvalWeight));
+                        (playerData.EvalScore * appSettings.AssessmentWeight));
+            }
+
+            // if no eval score is present, the combined score is further retracted
+            if (playerData.EvalScore == 0)
+            {
+                playerData.CombinedScore *= (1 - appSettings.NoAssessmentPenalty);
             }
 
             playerData.HasRedFlag = playerData.CombinedScore < 0;
