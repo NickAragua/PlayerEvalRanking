@@ -6,7 +6,7 @@ How to build teams:
 top left box, the "Coalesced Player List". This can be done as many times as you have coach evals. You can drag-and-drop multiple evals at a time.
 - If you want to play around with the weights attached to the current/previous season/assessment scores and the player division, you can do that via "settings".
 - To import assessment and previous season scores from the "master player list" file that you may have gotten last season, drag and drop it to the coalesced player list and it will be integrated.
-- If you need to edit numbers in one of the coalesced player records, you can do that. 
+- If you need to edit numbers in one of the coalesced player records, you can do that by clicking the cell you want to edit. When finished, the combined score will recalculate if appropriate.
 - When you are ready to start building teams, click 'create team' one or more times, then drag and drop players from the coalesced player list to the current team.
 - If you want to conveniently move players between teams, click 'Team View' and drag and drop players between teams there.
 - Once satisfied with your teams, click 'export'. This will export the teams into a spreadsheet similar to what we send in when building teams, but less pretty looking. Sorry.
