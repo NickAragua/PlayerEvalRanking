@@ -221,6 +221,7 @@ namespace WYSAPlayerRanker
                         player.PreviousTeam = player.PreviousTeam.Replace("Westford ", "");
                     }
 
+                    player.JerseyNumber = worksheet.Cells[row, 8].GetValue<int>();
                     player.CurrentSeasonScore = worksheet.Cells[row, 10].GetValue<double>();
                     player.PreviousSeasonScore = worksheet.Cells[row, 12].GetValue<double>();
                     player.CombinedScore = worksheet.Cells[row, 16].GetValue<double>();
@@ -342,9 +343,9 @@ namespace WYSAPlayerRanker
                 worksheet.Cells[currentRow, y].Style.Fill.BackgroundColor.SetColor(Color.Gray);
                 worksheet.Cells[currentRow, y].Style.Border.BorderAround(ExcelBorderStyle.Thin);
 
-                worksheet.Cells[currentRow, y + 2].Value = player.FullName.Split(' ')[0];
+                worksheet.Cells[currentRow, y + 2].Value = player.FullName.Substring(player.FullName.IndexOf(' ') + 1);
                 worksheet.Cells[currentRow, y + 2].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                worksheet.Cells[currentRow, y + 3].Value = player.FullName.Split(' ')[1];
+                worksheet.Cells[currentRow, y + 3].Value = player.FullName.Split(' ')[0];
                 worksheet.Cells[currentRow, y + 3].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                 worksheet.Cells[currentRow, y + 4].Value = player.GradeLevel.ToString();
                 worksheet.Cells[currentRow, y + 4].Style.Border.BorderAround(ExcelBorderStyle.Thin);

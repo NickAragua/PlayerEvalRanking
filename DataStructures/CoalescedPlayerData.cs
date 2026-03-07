@@ -28,8 +28,9 @@ namespace WYSAPlayerRanker
         public bool HasRedFlag { get; set; }
         public bool HasAssociatedCoach { get; set; }
         public int PreviousTeamDivision { get; set; }
+        public int JerseyNumber { get; set; }
 
-        
+
 
         [Browsable(false)]
         public string Key
