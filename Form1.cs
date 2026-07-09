@@ -45,6 +45,7 @@ namespace WYSAPlayerRanker
 
         private void InitializeCoalescedGridViewSorting()
         {
+            CoalescedGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
             CoalescedGridView.ColumnHeaderMouseClick += CoalescedGridView_ColumnHeaderMouseClick;
             CoalescedGridView.CellValueChanged += CoalescedGridView_CellValueChanged;
         }
@@ -217,6 +218,7 @@ namespace WYSAPlayerRanker
             CoalescedGridView.DataSource = dataStore.CoalescedPlayerDataByName.Values.ToList();
             SortCoalescedGridView(coalescedSortColumn, coalescedSortOrder);
             CoalescedGridView.Refresh();
+
 
             // Refresh TeamGridView with the updated team roster
             TeamGridView.ClearSelection();
