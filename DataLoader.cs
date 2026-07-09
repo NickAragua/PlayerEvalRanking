@@ -19,22 +19,57 @@ namespace WYSAPlayerRanker
 
         private const int COACH_EVAL_STARTING_ROW = 3;
 
+        private static readonly Dictionary<Columns, int> ColumnIndexes2026 = new Dictionary<Columns, int>() {
+            { Columns.FirstName, 2 },
+            { Columns.LastName, 1 },
+            { Columns.Grade, 3 },
+            { Columns.Team, 4 },
+            { Columns.Div, 5 },
+            { Columns.OrdinalRanking, 6 },
+            { Columns.Placement, 7 },
+            { Columns.Technical, 8 },
+            { Columns.Tactical, 9 },
+            { Columns.Mental, 10 },
+            { Columns.Physical, 11 },
+            { Columns.Attendance, 12 },
+            { Columns.GoalkeeperSkills, 14 },
+            { Columns.AdditionalComments, 15 }
+        };
+
+        private static readonly Dictionary<Columns, int> ColumnIndexes2025 = new Dictionary<Columns, int>() {
+            { Columns.FirstName, 2 },
+            { Columns.LastName, 1 },
+            { Columns.Grade, 100 },
+            { Columns.Team, 3 },
+            { Columns.Div, 4 },
+            { Columns.OrdinalRanking, 5 },
+            { Columns.Placement, 6 },
+            { Columns.Technical, 7 },
+            { Columns.Tactical, 8 },
+            { Columns.Mental, 9 },
+            { Columns.Physical, 10 },
+            { Columns.Attendance, 11 },
+            { Columns.GoalkeeperSkills, 12 },
+            { Columns.AdditionalComments, 13 }
+        };
+
         private enum Columns
         {
-            FirstName = 2,
-            LastName = 1,
-            Team = 3,
-            Div = 4,
-            OrdinalRanking = 5,
-            Season = 99,
-            Placement = 6,
-            Technical = 7,
-            Tactical = 8,
-            Mental = 9,
-            Physical = 10,
-            Attendance = 11,
-            GoalkeeperSkills = 12,
-            AdditionalComments = 13
+            FirstName,
+            LastName,
+            Grade,
+            Team,
+            Div,
+            OrdinalRanking,
+            Season,
+            Placement,
+            Technical,
+            Tactical,
+            Mental,
+            Physical,
+            Attendance,
+            GoalkeeperSkills,
+            AdditionalComments
         }
 
         /// <summary>
@@ -60,6 +95,8 @@ namespace WYSAPlayerRanker
                     worksheet = currentWorksheet;
                     break;
                 }
+
+                
 
                 int rowCount = worksheet?.Dimension?.Rows ?? 0;
 
@@ -102,6 +139,9 @@ namespace WYSAPlayerRanker
             var players = new List<SeasonPlayerData>();
             StringBuilder sb = new StringBuilder();
 
+            var columnMapping = filePath.Contains("S26") ? ColumnIndexes2026 : ColumnIndexes2025;
+            String season = filePath.Contains("S26") ? "S26" : "F25";
+
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
                 ExcelWorksheet worksheet = null;
@@ -130,20 +170,20 @@ namespace WYSAPlayerRanker
                     {
                         var player = new SeasonPlayerData();
                         player.SourceDataFile = Path.GetFileName(filePath);
-                        player.FirstName = worksheet.Cells[row, (int)Columns.FirstName].GetValue<string>();
-                        player.LastName = worksheet.Cells[row, (int)Columns.LastName].GetValue<string>();
-                        player.TeamName = worksheet.Cells[row, (int)Columns.Team].GetValue<string>();
-                        player.Division = worksheet.Cells[row, (int)Columns.Div].GetValue<int>();
-                        player.OrdinalRanking = worksheet.Cells[row, (int)Columns.OrdinalRanking].GetValue<int>();
-                        player.Season = "Fall 2025";//GetCellValue(worksheet, row, "Season"),
-                        player.PlacementRecommendation = ParsePlacementRecommendation(worksheet.Cells[row, (int)Columns.Placement].GetValue<string>());
-                        player.TechnicalScore = worksheet.Cells[row, (int)Columns.Technical].GetValue<int>();
-                        player.TacticalScore = worksheet.Cells[row, (int)Columns.Tactical].GetValue<int>();
-                        player.MentalScore = worksheet.Cells[row, (int)Columns.Mental].GetValue<int>();
-                        player.PhysicalScore = worksheet.Cells[row, (int)Columns.Physical].GetValue<int>();
-                        player.AttendanceScore = worksheet.Cells[row, (int)Columns.Attendance].GetValue<int>();
-                        player.GoalkeeperScore = worksheet.Cells[row, (int)Columns.GoalkeeperSkills].GetValue<int>();
-                        player.Comments = worksheet.Cells[row, (int)Columns.AdditionalComments].GetValue<string>();
+                        player.FirstName = worksheet.Cells[row, columnMapping[Columns.FirstName]].GetValue<string>();
+                        player.LastName = worksheet.Cells[row, columnMapping[Columns.LastName]].GetValue<string>();
+                        player.TeamName = worksheet.Cells[row, columnMapping[Columns.Team]].GetValue<string>();
+                        player.Division = worksheet.Cells[row, columnMapping[Columns.Div]].GetValue<int>();
+                        player.OrdinalRanking = worksheet.Cells[row, columnMapping[Columns.OrdinalRanking]].GetValue<int>();
+                        player.Season = season;
+                        player.PlacementRecommendation = ParsePlacementRecommendation(worksheet.Cells[row, columnMapping[Columns.Placement]].GetValue<string>());
+                        player.TechnicalScore = worksheet.Cells[row, columnMapping[Columns.Technical]].GetValue<int>();
+                        player.TacticalScore = worksheet.Cells[row, columnMapping[Columns.Tactical]].GetValue<int>();
+                        player.MentalScore = worksheet.Cells[row, columnMapping[Columns.Mental]].GetValue<int>();
+                        player.PhysicalScore = worksheet.Cells[row, columnMapping[Columns.Physical]].GetValue<int>();
+                        player.AttendanceScore = worksheet.Cells[row, columnMapping[Columns.Attendance]].GetValue<int>();
+                        player.GoalkeeperScore = worksheet.Cells[row, columnMapping[Columns.GoalkeeperSkills]].GetValue<int>();
+                        player.Comments = worksheet.Cells[row, columnMapping[Columns.AdditionalComments]].GetValue<string>();
 
                         if (string.IsNullOrWhiteSpace(player.FirstName) && string.IsNullOrWhiteSpace(player.LastName))
                         {
