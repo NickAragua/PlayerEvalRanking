@@ -175,6 +175,8 @@ namespace WYSAPlayerRanker
                         player.TeamName = worksheet.Cells[row, columnMapping[Columns.Team]].GetValue<string>();
                         player.Division = worksheet.Cells[row, columnMapping[Columns.Div]].GetValue<int>();
                         player.OrdinalRanking = worksheet.Cells[row, columnMapping[Columns.OrdinalRanking]].GetValue<int>();
+                        player.GradeLevel = worksheet.Cells[row, columnMapping[Columns.Grade]] != null ?
+                            worksheet.Cells[row, columnMapping[Columns.Grade]].GetValue<int>() : -1;
                         player.Season = season;
                         player.PlacementRecommendation = ParsePlacementRecommendation(worksheet.Cells[row, columnMapping[Columns.Placement]].GetValue<string>());
                         player.TechnicalScore = worksheet.Cells[row, columnMapping[Columns.Technical]].GetValue<int>();

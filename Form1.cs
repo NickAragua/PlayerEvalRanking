@@ -288,10 +288,12 @@ namespace WYSAPlayerRanker
                 dataStore.MovePlayerToTeam(droppedPlayer, selectedTeam);
             }
 
-            CoalescedGridView.DataSource = null;
+            int scrollPop = CoalescedGridView.FirstDisplayedScrollingRowIndex;
             CoalescedGridView.DataSource = dataStore.CoalescedPlayerDataByName.Values.ToList();
             SortCoalescedGridView(coalescedSortColumn, coalescedSortOrder);
+            CoalescedGridView.FirstDisplayedScrollingRowIndex = scrollPop;
             CoalescedGridView.Refresh();
+            
 
             // Refresh TeamGridView with the updated team roster
             TeamGridView.DataSource = null;

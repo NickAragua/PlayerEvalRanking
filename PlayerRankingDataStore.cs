@@ -151,10 +151,11 @@ namespace WYSAPlayerRanker
 
             coalescedPlayerData.CurrentSeasonScore = CalculateAveragePlayerScore(player);
 
-            if (RegisteredPlayers.ContainsKey(player.Key))
+            coalescedPlayerData.GradeLevel = player.GradeLevel;
+            /*if (RegisteredPlayers.ContainsKey(player.Key))
             {
                 coalescedPlayerData.GradeLevel = RegisteredPlayers[player.Key].GradeLevel;
-            }
+            }*/
 
             coalescedPlayerData.PreviousTeam = player.TeamName;
 
