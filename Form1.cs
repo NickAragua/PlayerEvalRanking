@@ -649,6 +649,9 @@ namespace WYSAPlayerRanker
 
                         RegistrantsGridView.DataSource = dataStore.RegisteredPlayers.Values.ToList();
                         RegistrantsGridView.Refresh();
+
+                        IndividualGridView.DataSource = null;
+                        IndividualGridView.Refresh();
                     }
                     catch (Exception ex)
                     {
