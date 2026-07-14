@@ -60,6 +60,8 @@ namespace WYSAPlayerRanker
         public int PhysicalScore { get; set; }
         public int AttendanceScore { get; set; }
 
+        public int GradeLevel { get; set; }
+
         public int GoalkeeperScore { get; set; }
         public string Comments { get; set; }
         public bool RedFlag { get; set; }

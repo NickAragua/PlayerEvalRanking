@@ -47,7 +47,7 @@ namespace WYSAPlayerRanker
         public static void CalculateCombinedScore(this CoalescedPlayerData playerData, ApplicationSettings appSettings)
         {
             double divisionMultiplier = 1;
-            if (playerData.PreviousTeamDivision > 0 && playerData.PreviousTeamDivision < appSettings.DivisionWeights.Count)
+            if (playerData.PreviousTeamDivision > 0 && playerData.PreviousTeamDivision <= appSettings.DivisionWeights.Count)
             {
                 divisionMultiplier = appSettings.DivisionWeights[playerData.PreviousTeamDivision - 1];
             }
