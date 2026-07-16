@@ -71,6 +71,7 @@ namespace WYSAPlayerRanker
                 dataGridView.DataSource = teamPlayers;
                 dataGridView.Name = team.Key;
                 dataGridView.DefaultCellStyle.Format = "0.00";
+                dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
                 dataGridView.Refresh();
 
                 EnableDragAndDrop(dataGridView, team.Key);

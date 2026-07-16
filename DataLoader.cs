@@ -221,7 +221,8 @@ namespace WYSAPlayerRanker
                         continue;
                     }
 
-                    switch (currentWorksheet.Cells[1, 4]?.GetValue<string>())
+                    return LoadMasterListS26(currentWorksheet);
+                    /*switch (currentWorksheet.Cells[1, 4]?.GetValue<string>())
                     {
                         case "Grade":
                             season = "F25";
@@ -230,7 +231,7 @@ namespace WYSAPlayerRanker
                         default:
                             season = "S26";
                             return LoadMasterListF26(currentWorksheet);
-                    }
+                    }*/
                 }
             }
 
@@ -306,6 +307,48 @@ namespace WYSAPlayerRanker
                     player.PreviousSeasonScore = worksheet.Cells[row, 12].GetValue<double>();
                     player.EvalScore = worksheet.Cells[row, 13].GetValue<double>();
                     player.PreviousTeamDivision = worksheet.Cells[row, 8].GetValue<int>();
+
+                    if (string.IsNullOrWhiteSpace(player.FullName))
+                    {
+                        // Skip empty rows
+                        continue;
+                    }
+
+                    players.Add(player);
+                }
+                catch (Exception ex)
+                {
+                    // Log or handle parsing errors for individual rows
+                    System.Diagnostics.Debug.WriteLine($"Error parsing row {row}: {ex.Message}");
+                }
+            }
+
+            return players;
+        }
+
+        /// <summary>
+        /// Loads a list of CoalescedPlayerData from last season's master player list
+        /// with coach eval populated as "previous season score" and 
+        /// </summary>
+        public static List<CoalescedPlayerData> LoadMasterListS26(ExcelWorksheet worksheet)
+        {
+            var players = new List<CoalescedPlayerData>();
+
+            int rowCount = worksheet?.Dimension?.Rows ?? 0;
+            // Assuming first row contains headers
+            for (int row = 2; row <= rowCount; row++)
+            {
+                try
+                {
+                    var player = new CoalescedPlayerData();
+                    player.FullName = worksheet.Cells[row, 3].GetValue<string>() + " " +
+                        worksheet.Cells[row, 2].GetValue<string>();
+                    player.PreviousTeam = worksheet.Cells[row, 7].GetValue<string>();
+                    player.CurrentSeasonScore = worksheet.Cells[row, 9].GetValue<double>();
+                    player.PreviousSeasonScore = worksheet.Cells[row, 10].GetValue<double>();
+                    player.EvalScore = worksheet.Cells[row, 12].GetValue<double>();
+                    player.CombinedScore = worksheet.Cells[row, 13].GetValue<double>();
+                    //player.PreviousTeamDivision = worksheet.Cells[row, 8].GetValue<int>();
 
                     if (string.IsNullOrWhiteSpace(player.FullName))
                     {

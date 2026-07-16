@@ -181,13 +181,18 @@ namespace WYSAPlayerRanker
                 {
                     string season;
                     var loadedData = ExcelPlayerDataLoader.LoadMasterList(excelFile, out season);
-                    dataStore.ImportFromLastSeasonMasterList(loadedData);
+                    
+                    foreach (var player in loadedData)
+                    {
+                        dataStore.CoalescedPlayerDataByName.Add(player.Key, player);
+                    }
+                    /*dataStore.ImportFromLastSeasonMasterList(loadedData);
 
                     // hack
                     if (season == "F25") 
                     {
                         dataStore.RecalculatePlayerScores();
-                    }
+                    }*/
 
                     CoalescedGridView.DataSource = dataStore.CoalescedPlayerDataByName.Values.ToList();
                     CoalescedGridView.Refresh();
@@ -291,7 +296,11 @@ namespace WYSAPlayerRanker
             int scrollPop = CoalescedGridView.FirstDisplayedScrollingRowIndex;
             CoalescedGridView.DataSource = dataStore.CoalescedPlayerDataByName.Values.ToList();
             SortCoalescedGridView(coalescedSortColumn, coalescedSortOrder);
-            CoalescedGridView.FirstDisplayedScrollingRowIndex = scrollPop;
+
+            if (scrollPop >= 0 && scrollPop < dataStore.CoalescedPlayerDataByName.Count)
+            {
+                CoalescedGridView.FirstDisplayedScrollingRowIndex = scrollPop;
+            }
             CoalescedGridView.Refresh();
             
 
